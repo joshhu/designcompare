@@ -32,19 +32,14 @@ npx skills add pbakaus/impeccable -g -y
 
 （`frontend-design` 來自 Claude Code 官方 plugin；`ui-ux-pro-max` 已安裝於 `~/.claude/skills/`。）
 
-## 線上瀏覽（GitHub Pages）
-
-- **對比首頁（分頁切換七個變體）**：https://joshhu.github.io/designcompare/
-- 各變體直連：`https://joshhu.github.io/designcompare/pages/<變體名>.html`
-
-## 成果截圖（1440×900）
+## 成果截圖（1440×900，點圖可看原始 HTML）
 
 | | |
 |---|---|
-| **baseline** — 無 Skill 對照組<br>[![baseline](screenshots/baseline.png)](https://joshhu.github.io/designcompare/pages/baseline.html) | **frontend-design** — Anthropic 官方<br>[![frontend-design](screenshots/frontend-design.png)](https://joshhu.github.io/designcompare/pages/frontend-design.html) |
-| **ui-ux-pro-max** — 規則庫型<br>[![ui-ux-pro-max](screenshots/ui-ux-pro-max.png)](https://joshhu.github.io/designcompare/pages/ui-ux-pro-max.html) | **emil-design-eng** — 動效最佳<br>[![emil-design-eng](screenshots/emil-design-eng.png)](https://joshhu.github.io/designcompare/pages/emil-design-eng.html) |
-| **web-design-guidelines** — Vercel 規範<br>[![web-design-guidelines](screenshots/web-design-guidelines.png)](https://joshhu.github.io/designcompare/pages/web-design-guidelines.html) | **taste-skill** — AI 味最小<br>[![taste-skill](screenshots/taste-skill.png)](https://joshhu.github.io/designcompare/pages/taste-skill.html) |
-| **impeccable** — 設計語彙系統<br>[![impeccable](screenshots/impeccable.png)](https://joshhu.github.io/designcompare/pages/impeccable.html) | |
+| **baseline** — 無 Skill 對照組<br>[![baseline](screenshots/baseline.png)](pages/baseline.html) | **frontend-design** — Anthropic 官方<br>[![frontend-design](screenshots/frontend-design.png)](pages/frontend-design.html) |
+| **ui-ux-pro-max** — 規則庫型<br>[![ui-ux-pro-max](screenshots/ui-ux-pro-max.png)](pages/ui-ux-pro-max.html) | **emil-design-eng** — 動效最佳<br>[![emil-design-eng](screenshots/emil-design-eng.png)](pages/emil-design-eng.html) |
+| **web-design-guidelines** — Vercel 規範<br>[![web-design-guidelines](screenshots/web-design-guidelines.png)](pages/web-design-guidelines.html) | **taste-skill** — AI 味最小<br>[![taste-skill](screenshots/taste-skill.png)](pages/taste-skill.html) |
+| **impeccable** — 設計語彙系統<br>[![impeccable](screenshots/impeccable.png)](pages/impeccable.html) | |
 
 ## 本地瀏覽
 
