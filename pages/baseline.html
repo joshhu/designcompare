@@ -1,0 +1,783 @@
+<!DOCTYPE html>
+<html lang="zh-Hant-TW">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Pulse 脈搏｜電商營運分析平台</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Noto+Sans+TC:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#f3f5f9;
+    --surface:#ffffff;
+    --sidebar-bg:#171e2e;
+    --sidebar-text:#8b96ad;
+    --sidebar-active:#ffffff;
+    --border:#e4e8f0;
+    --text:#1c2333;
+    --text-2:#5b6579;
+    --text-3:#8a93a6;
+    --primary:#3b5bdb;
+    --primary-soft:#e8edfc;
+    --up:#0f9d58;
+    --up-soft:#e3f5ec;
+    --down:#d64545;
+    --down-soft:#fbeaea;
+    --warn:#b7791f;
+    --warn-soft:#fdf3e0;
+    --info:#2b6cb0;
+    --info-soft:#e6f0fa;
+    --neutral-soft:#eef0f5;
+    --radius:10px;
+    --shadow:0 1px 2px rgba(23,30,46,.05),0 1px 3px rgba(23,30,46,.06);
+  }
+  *{margin:0;padding:0;box-sizing:border-box}
+  html{font-size:15px}
+  body{
+    font-family:"Noto Sans TC","PingFang TC","Microsoft JhengHei",sans-serif;
+    background:var(--bg);
+    color:var(--text);
+    -webkit-font-smoothing:antialiased;
+  }
+  .num{font-family:"Inter","Noto Sans TC",sans-serif;font-variant-numeric:tabular-nums}
+
+  /* ===== 版面骨架 ===== */
+  .layout{display:flex;min-height:100vh}
+
+  /* ===== 側邊欄 ===== */
+  .sidebar{
+    width:232px;flex-shrink:0;
+    background:var(--sidebar-bg);
+    display:flex;flex-direction:column;
+    position:sticky;top:0;height:100vh;
+  }
+  .brand{
+    display:flex;align-items:center;gap:10px;
+    padding:20px 20px 18px;
+    border-bottom:1px solid rgba(255,255,255,.07);
+  }
+  .brand-mark{
+    width:32px;height:32px;border-radius:8px;flex-shrink:0;
+    background:linear-gradient(135deg,#4c6ef5,#2f44ad);
+    display:flex;align-items:center;justify-content:center;
+  }
+  .brand-mark svg{display:block}
+  .brand-name{color:#fff;font-weight:700;font-size:1.05rem;letter-spacing:.02em}
+  .brand-name small{display:block;font-weight:400;font-size:.68rem;color:var(--sidebar-text);letter-spacing:.08em;margin-top:1px}
+
+  .nav{flex:1;padding:14px 12px;overflow-y:auto}
+  .nav-group{margin-bottom:18px}
+  .nav-label{
+    font-size:.68rem;color:#5a6478;letter-spacing:.12em;
+    padding:0 10px;margin-bottom:6px;
+  }
+  .nav a{
+    display:flex;align-items:center;gap:10px;
+    padding:8px 10px;border-radius:7px;
+    color:var(--sidebar-text);text-decoration:none;
+    font-size:.9rem;line-height:1;
+    transition:background .12s,color .12s;
+  }
+  .nav a svg{flex-shrink:0;opacity:.85}
+  .nav a:hover{background:rgba(255,255,255,.06);color:#d7dce6}
+  .nav a.active{background:var(--primary);color:var(--sidebar-active)}
+  .nav a .count{
+    margin-left:auto;font-size:.7rem;
+    background:rgba(255,255,255,.12);color:#c6cdda;
+    padding:2px 7px;border-radius:99px;
+  }
+  .nav a.active .count{background:rgba(255,255,255,.22);color:#fff}
+
+  .sidebar-foot{
+    padding:14px 16px;border-top:1px solid rgba(255,255,255,.07);
+    display:flex;align-items:center;gap:10px;
+  }
+  .avatar{
+    width:32px;height:32px;border-radius:50%;flex-shrink:0;
+    background:#3d4c6e;color:#dfe5f0;
+    display:flex;align-items:center;justify-content:center;
+    font-size:.78rem;font-weight:500;
+  }
+  .sidebar-foot .who{min-width:0}
+  .sidebar-foot .who b{display:block;color:#e6eaf2;font-size:.84rem;font-weight:500;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .sidebar-foot .who span{font-size:.72rem;color:var(--sidebar-text)}
+
+  /* ===== 主區 ===== */
+  .main{flex:1;min-width:0;display:flex;flex-direction:column}
+
+  /* 頂欄 */
+  .topbar{
+    background:var(--surface);border-bottom:1px solid var(--border);
+    padding:0 24px;height:58px;
+    display:flex;align-items:center;gap:14px;
+    position:sticky;top:0;z-index:20;
+  }
+  .menu-btn{
+    display:none;background:none;border:1px solid var(--border);border-radius:7px;
+    width:36px;height:36px;cursor:pointer;color:var(--text-2);
+    align-items:center;justify-content:center;
+  }
+  .page-title{font-size:1.02rem;font-weight:700}
+  .page-title span{display:block;font-size:.72rem;font-weight:400;color:var(--text-3);margin-top:1px}
+  .topbar .spacer{flex:1}
+  .search{
+    display:flex;align-items:center;gap:8px;
+    background:var(--bg);border:1px solid var(--border);border-radius:8px;
+    padding:0 12px;height:36px;width:260px;color:var(--text-3);
+  }
+  .search input{
+    border:none;background:none;outline:none;flex:1;min-width:0;
+    font:inherit;font-size:.85rem;color:var(--text);
+  }
+  .search kbd{
+    font-family:"Inter",sans-serif;font-size:.66rem;color:var(--text-3);
+    border:1px solid var(--border);border-radius:4px;padding:1px 5px;background:#fff;
+  }
+  .range-picker{
+    display:flex;align-items:center;gap:8px;height:36px;
+    border:1px solid var(--border);border-radius:8px;
+    padding:0 12px;font-size:.83rem;color:var(--text-2);
+    background:var(--surface);cursor:pointer;white-space:nowrap;
+  }
+  .range-picker:hover{border-color:#c9d1e0}
+  .icon-btn{
+    position:relative;width:36px;height:36px;border-radius:8px;
+    border:1px solid var(--border);background:var(--surface);
+    display:flex;align-items:center;justify-content:center;
+    color:var(--text-2);cursor:pointer;
+  }
+  .icon-btn:hover{background:var(--bg)}
+  .icon-btn .dot{
+    position:absolute;top:7px;right:8px;width:7px;height:7px;border-radius:50%;
+    background:var(--down);border:1.5px solid #fff;
+  }
+
+  /* 內容 */
+  .content{padding:22px 24px 36px;max-width:1440px;width:100%;margin:0 auto}
+  .content-head{display:flex;align-items:baseline;justify-content:space-between;gap:12px;margin-bottom:16px;flex-wrap:wrap}
+  .content-head h1{font-size:1.25rem;font-weight:700}
+  .content-head p{font-size:.82rem;color:var(--text-3)}
+
+  /* ===== KPI 卡 ===== */
+  .kpi-grid{
+    display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-bottom:16px;
+  }
+  .kpi{
+    background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);
+    box-shadow:var(--shadow);padding:16px 18px 12px;
+    display:flex;flex-direction:column;gap:2px;min-width:0;
+  }
+  .kpi-top{display:flex;align-items:center;justify-content:space-between;gap:8px}
+  .kpi-title{font-size:.8rem;color:var(--text-2)}
+  .kpi-delta{
+    font-size:.72rem;font-weight:600;padding:2px 7px;border-radius:99px;
+    display:inline-flex;align-items:center;gap:3px;white-space:nowrap;
+  }
+  .kpi-delta.up{color:var(--up);background:var(--up-soft)}
+  .kpi-delta.down{color:var(--down);background:var(--down-soft)}
+  .kpi-value{font-size:1.5rem;font-weight:700;letter-spacing:-.01em;margin-top:4px}
+  .kpi-value small{font-size:.85rem;font-weight:500;color:var(--text-2);margin-right:1px}
+  .kpi-note{font-size:.72rem;color:var(--text-3)}
+  .kpi-spark{margin-top:8px;height:34px}
+  .kpi-spark svg{display:block;width:100%;height:100%}
+
+  /* ===== 圖表列 ===== */
+  .chart-row{
+    display:grid;grid-template-columns:minmax(0,2fr) minmax(0,1fr);gap:14px;margin-bottom:16px;
+  }
+  .card{
+    background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);
+    box-shadow:var(--shadow);min-width:0;
+  }
+  .card-head{
+    display:flex;align-items:center;justify-content:space-between;gap:10px;
+    padding:14px 18px 0;flex-wrap:wrap;
+  }
+  .card-head h2{font-size:.95rem;font-weight:700}
+  .card-head .sub{font-size:.74rem;color:var(--text-3);margin-top:2px}
+  .seg{
+    display:flex;border:1px solid var(--border);border-radius:7px;overflow:hidden;
+  }
+  .seg button{
+    border:none;background:var(--surface);padding:5px 12px;font:inherit;
+    font-size:.75rem;color:var(--text-2);cursor:pointer;
+  }
+  .seg button+button{border-left:1px solid var(--border)}
+  .seg button.on{background:var(--primary-soft);color:var(--primary);font-weight:600}
+  .card-body{padding:12px 18px 18px}
+
+  .line-chart svg{display:block;width:100%;height:auto}
+  .axis-text{font-family:"Inter",sans-serif;font-size:11px;fill:var(--text-3)}
+  .grid-line{stroke:#eceff5;stroke-width:1}
+  .chart-legend{display:flex;gap:18px;font-size:.75rem;color:var(--text-2);padding:0 18px 4px;flex-wrap:wrap}
+  .chart-legend i{display:inline-block;width:10px;height:10px;border-radius:3px;margin-right:6px;vertical-align:-1px}
+
+  /* 甜甜圈 */
+  .donut-wrap{display:flex;align-items:center;gap:18px;flex-wrap:wrap}
+  .donut{position:relative;width:150px;height:150px;flex-shrink:0;margin:0 auto}
+  .donut svg{width:100%;height:100%;transform:rotate(-90deg)}
+  .donut-center{
+    position:absolute;inset:0;display:flex;flex-direction:column;
+    align-items:center;justify-content:center;text-align:center;
+  }
+  .donut-center b{font-size:1.15rem;font-weight:700}
+  .donut-center span{font-size:.68rem;color:var(--text-3)}
+  .donut-legend{flex:1;min-width:150px;display:flex;flex-direction:column;gap:9px}
+  .donut-legend .row{display:flex;align-items:center;gap:8px;font-size:.8rem}
+  .donut-legend i{width:10px;height:10px;border-radius:3px;flex-shrink:0}
+  .donut-legend .name{color:var(--text-2);flex:1}
+  .donut-legend .pct{font-weight:600}
+  .donut-legend .amt{color:var(--text-3);font-size:.72rem;width:76px;text-align:right}
+
+  /* 熱銷長條 */
+  .hbar-list{display:flex;flex-direction:column;gap:13px}
+  .hbar .meta{display:flex;justify-content:space-between;gap:10px;font-size:.8rem;margin-bottom:5px}
+  .hbar .meta .rank{
+    display:inline-block;width:18px;height:18px;border-radius:5px;text-align:center;
+    line-height:18px;font-size:.68rem;font-weight:600;background:var(--neutral-soft);
+    color:var(--text-2);margin-right:7px;font-family:"Inter",sans-serif;
+  }
+  .hbar:first-child .meta .rank{background:#fff3d6;color:#9a6b00}
+  .hbar .meta .amt{color:var(--text-2);font-weight:600;white-space:nowrap}
+  .hbar .track{height:8px;border-radius:99px;background:var(--neutral-soft);overflow:hidden}
+  .hbar .fill{height:100%;border-radius:99px;background:linear-gradient(90deg,#5c7cfa,#3b5bdb)}
+
+  .bottom-row{
+    display:grid;grid-template-columns:minmax(0,1fr) minmax(0,2.2fr);gap:14px;
+  }
+
+  /* ===== 訂單表格 ===== */
+  .table-scroll{overflow-x:auto}
+  table{width:100%;border-collapse:collapse;font-size:.83rem;min-width:760px}
+  thead th{
+    text-align:left;font-weight:500;color:var(--text-3);font-size:.73rem;
+    padding:10px 12px;border-bottom:1px solid var(--border);
+    background:#fafbfd;white-space:nowrap;
+  }
+  thead th.r,td.r{text-align:right}
+  tbody td{
+    padding:11px 12px;border-bottom:1px solid #eef1f6;
+    color:var(--text-2);white-space:nowrap;vertical-align:middle;
+  }
+  tbody tr:last-child td{border-bottom:none}
+  tbody tr:hover td{background:#f7f9fc}
+  td .oid{font-family:"Inter",sans-serif;font-size:.78rem;color:var(--primary);font-weight:500}
+  td .cust{color:var(--text);font-weight:500}
+  td .prod{max-width:230px;overflow:hidden;text-overflow:ellipsis}
+  td .amt{color:var(--text);font-weight:600}
+  .badge{
+    display:inline-flex;align-items:center;gap:5px;
+    font-size:.72rem;font-weight:500;padding:3px 9px;border-radius:99px;white-space:nowrap;
+  }
+  .badge::before{content:"";width:6px;height:6px;border-radius:50%;background:currentColor}
+  .badge.done{color:var(--up);background:var(--up-soft)}
+  .badge.ship{color:var(--info);background:var(--info-soft)}
+  .badge.proc{color:#6b46c1;background:#f1ebfb}
+  .badge.wait{color:var(--warn);background:var(--warn-soft)}
+  .badge.cancel{color:var(--text-3);background:var(--neutral-soft)}
+  .badge.refund{color:var(--down);background:var(--down-soft)}
+  .table-foot{
+    display:flex;align-items:center;justify-content:space-between;gap:10px;
+    padding:12px 18px;border-top:1px solid var(--border);font-size:.76rem;color:var(--text-3);
+    flex-wrap:wrap;
+  }
+  .pager{display:flex;gap:6px}
+  .pager button{
+    min-width:28px;height:28px;border-radius:6px;border:1px solid var(--border);
+    background:var(--surface);font:inherit;font-size:.75rem;color:var(--text-2);cursor:pointer;
+    font-family:"Inter",sans-serif;
+  }
+  .pager button.on{background:var(--primary);border-color:var(--primary);color:#fff}
+  .pager button:hover:not(.on){background:var(--bg)}
+  .link{color:var(--primary);text-decoration:none;font-size:.78rem;font-weight:500}
+  .link:hover{text-decoration:underline}
+
+  /* ===== 響應式 ===== */
+  @media (max-width:1200px){
+    .chart-row{grid-template-columns:1fr}
+    .bottom-row{grid-template-columns:1fr}
+    .search{width:200px}
+  }
+  @media (max-width:900px){
+    .kpi-grid{grid-template-columns:repeat(2,1fr)}
+    .sidebar{
+      position:fixed;left:0;top:0;z-index:40;
+      transform:translateX(-100%);transition:transform .2s ease;
+    }
+    body.nav-open .sidebar{transform:translateX(0)}
+    body.nav-open::after{
+      content:"";position:fixed;inset:0;background:rgba(15,20,32,.45);z-index:30;
+    }
+    .menu-btn{display:flex}
+    .search{display:none}
+  }
+  @media (max-width:560px){
+    .kpi-grid{grid-template-columns:1fr}
+    .content{padding:16px 14px 28px}
+    .topbar{padding:0 14px}
+    .range-picker{display:none}
+  }
+</style>
+</head>
+<body>
+<div class="layout">
+
+  <!-- ============ 側邊欄 ============ -->
+  <aside class="sidebar" id="sidebar">
+    <div class="brand">
+      <div class="brand-mark">
+        <svg width="18" height="18" viewBox="0 0 18 18" fill="none">
+          <polyline points="1,10 5,10 7,4 11,14 13,8 17,8" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </div>
+      <div class="brand-name">Pulse 脈搏<small>電商營運分析平台</small></div>
+    </div>
+
+    <nav class="nav">
+      <div class="nav-group">
+        <div class="nav-label">分析</div>
+        <a href="#" class="active">
+          <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><rect x="1.5" y="1.5" width="5.5" height="5.5" rx="1.5" stroke="currentColor" stroke-width="1.5"/><rect x="9" y="1.5" width="5.5" height="5.5" rx="1.5" stroke="currentColor" stroke-width="1.5"/><rect x="1.5" y="9" width="5.5" height="5.5" rx="1.5" stroke="currentColor" stroke-width="1.5"/><rect x="9" y="9" width="5.5" height="5.5" rx="1.5" stroke="currentColor" stroke-width="1.5"/></svg>
+          營運總覽
+        </a>
+        <a href="#">
+          <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M2 13.5V9M8 13.5V2.5M14 13.5V6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+          銷售分析
+        </a>
+        <a href="#">
+          <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><circle cx="8" cy="5" r="3" stroke="currentColor" stroke-width="1.5"/><path d="M2.5 14c.8-2.6 3-4 5.5-4s4.7 1.4 5.5 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+          客戶輪廓
+        </a>
+      </div>
+      <div class="nav-group">
+        <div class="nav-label">營運</div>
+        <a href="#">
+          <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M2.5 3h2l1.6 8h6.4l1.5-5.5H5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/><circle cx="6.8" cy="13.2" r="1.1" fill="currentColor"/><circle cx="11.6" cy="13.2" r="1.1" fill="currentColor"/></svg>
+          訂單管理 <span class="count">42</span>
+        </a>
+        <a href="#">
+          <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M8 1.8 14 5v6L8 14.2 2 11V5l6-3.2Z" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/><path d="M2 5l6 3 6-3M8 8v6" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/></svg>
+          商品庫存 <span class="count">7</span>
+        </a>
+        <a href="#">
+          <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M9 1.5 3 9h4l-.8 5.5L12.5 7h-4L9 1.5Z" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/></svg>
+          行銷活動
+        </a>
+        <a href="#">
+          <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><rect x="2" y="2.5" width="12" height="11" rx="1.5" stroke="currentColor" stroke-width="1.5"/><path d="M2 6h12M6 6v7.5" stroke="currentColor" stroke-width="1.5"/></svg>
+          報表中心
+        </a>
+      </div>
+      <div class="nav-group">
+        <div class="nav-label">系統</div>
+        <a href="#">
+          <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><circle cx="8" cy="8" r="2.2" stroke="currentColor" stroke-width="1.5"/><path d="M8 1.8v2M8 12.2v2M1.8 8h2M12.2 8h2M3.6 3.6l1.4 1.4M11 11l1.4 1.4M12.4 3.6 11 5M5 11l-1.4 1.4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+          系統設定
+        </a>
+      </div>
+    </nav>
+
+    <div class="sidebar-foot">
+      <div class="avatar">曉</div>
+      <div class="who"><b>林曉慧</b><span>營運經理</span></div>
+    </div>
+  </aside>
+
+  <!-- ============ 主區 ============ -->
+  <div class="main">
+
+    <!-- 頂欄 -->
+    <header class="topbar">
+      <button class="menu-btn" id="menuBtn" aria-label="開啟選單">
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M2 4h12M2 8h12M2 12h12" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
+      </button>
+      <div class="page-title">營運總覽<span>官網 + 蝦皮 + momo + 門市，共 4 個通路</span></div>
+      <div class="spacer"></div>
+      <label class="search">
+        <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><circle cx="6" cy="6" r="4.4" stroke="currentColor" stroke-width="1.5"/><path d="m9.5 9.5 3 3" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+        <input type="text" placeholder="搜尋訂單、商品、客戶…">
+        <kbd>⌘K</kbd>
+      </label>
+      <div class="range-picker num">
+        <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><rect x="1.5" y="2.5" width="11" height="10" rx="1.5" stroke="currentColor" stroke-width="1.4"/><path d="M1.5 5.5h11M4.5 1v3M9.5 1v3" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/></svg>
+        2026/06/21 – 2026/07/04
+        <svg width="10" height="10" viewBox="0 0 10 10" fill="none"><path d="m2.5 4 2.5 2.5L7.5 4" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </div>
+      <button class="icon-btn" aria-label="通知">
+        <svg width="15" height="15" viewBox="0 0 15 15" fill="none"><path d="M7.5 1.8a3.9 3.9 0 0 0-3.9 3.9c0 3-1.3 4.3-1.3 4.3h10.4s-1.3-1.3-1.3-4.3a3.9 3.9 0 0 0-3.9-3.9ZM6.2 12.3a1.4 1.4 0 0 0 2.6 0" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        <span class="dot"></span>
+      </button>
+    </header>
+
+    <div class="content">
+
+      <div class="content-head">
+        <h1>今日即時戰情</h1>
+        <p>資料更新於 2026/07/04 14:35（每 10 分鐘自動更新）</p>
+      </div>
+
+      <!-- ============ KPI 卡 ============ -->
+      <section class="kpi-grid">
+
+        <article class="kpi">
+          <div class="kpi-top">
+            <span class="kpi-title">今日營收</span>
+            <span class="kpi-delta up num">▲ 12.4%</span>
+          </div>
+          <div class="kpi-value num"><small>NT$</small>486,320</div>
+          <div class="kpi-note">昨日同時段 NT$432,660</div>
+          <div class="kpi-spark">
+            <svg viewBox="0 0 100 34" preserveAspectRatio="none" aria-hidden="true">
+              <polyline points="0,24 8,21 16,26 24,17 32,15 40,10 48,5 56,8 64,18 72,14 80,9 88,7 94,4 100,2"
+                fill="none" stroke="#3b5bdb" stroke-width="1.8" stroke-linecap="round"/>
+            </svg>
+          </div>
+        </article>
+
+        <article class="kpi">
+          <div class="kpi-top">
+            <span class="kpi-title">今日訂單數</span>
+            <span class="kpi-delta up num">▲ 8.1%</span>
+          </div>
+          <div class="kpi-value num">412 <small style="margin-left:2px">筆</small></div>
+          <div class="kpi-note">昨日同時段 381 筆</div>
+          <div class="kpi-spark">
+            <svg viewBox="0 0 100 34" preserveAspectRatio="none" aria-hidden="true">
+              <polyline points="0,20 8,23 16,18 24,21 32,14 40,16 48,10 56,13 64,17 72,11 80,12 88,8 94,6 100,5"
+                fill="none" stroke="#3b5bdb" stroke-width="1.8" stroke-linecap="round"/>
+            </svg>
+          </div>
+        </article>
+
+        <article class="kpi">
+          <div class="kpi-top">
+            <span class="kpi-title">平均客單價</span>
+            <span class="kpi-delta up num">▲ 3.9%</span>
+          </div>
+          <div class="kpi-value num"><small>NT$</small>1,180</div>
+          <div class="kpi-note">近 30 日平均 NT$1,135</div>
+          <div class="kpi-spark">
+            <svg viewBox="0 0 100 34" preserveAspectRatio="none" aria-hidden="true">
+              <polyline points="0,18 8,20 16,16 24,19 32,17 40,13 48,15 56,12 64,14 72,10 80,12 88,9 94,8 100,7"
+                fill="none" stroke="#3b5bdb" stroke-width="1.8" stroke-linecap="round"/>
+            </svg>
+          </div>
+        </article>
+
+        <article class="kpi">
+          <div class="kpi-top">
+            <span class="kpi-title">轉換率</span>
+            <span class="kpi-delta down num">▼ 0.3pp</span>
+          </div>
+          <div class="kpi-value num">3.42<small style="margin-left:2px">%</small></div>
+          <div class="kpi-note">流量升高稀釋轉換，訪客 +18.2%</div>
+          <div class="kpi-spark">
+            <svg viewBox="0 0 100 34" preserveAspectRatio="none" aria-hidden="true">
+              <polyline points="0,10 8,8 16,12 24,9 32,13 40,11 48,15 56,12 64,16 72,14 80,18 88,15 94,17 100,19"
+                fill="none" stroke="#d64545" stroke-width="1.8" stroke-linecap="round"/>
+            </svg>
+          </div>
+        </article>
+
+      </section>
+
+      <!-- ============ 圖表列 ============ -->
+      <section class="chart-row">
+
+        <!-- 營收趨勢（手寫 SVG） -->
+        <article class="card line-chart">
+          <div class="card-head">
+            <div>
+              <h2>營收趨勢</h2>
+              <div class="sub">2026/06/21 – 07/04，單位：新臺幣</div>
+            </div>
+            <div class="seg" role="tablist">
+              <button class="on">14 天</button>
+              <button>30 天</button>
+              <button>90 天</button>
+            </div>
+          </div>
+          <div class="card-body">
+            <svg viewBox="0 0 720 260" role="img" aria-label="近 14 日營收折線圖，自 35.2 萬成長至 48.6 萬">
+              <defs>
+                <linearGradient id="revFill" x1="0" y1="0" x2="0" y2="1">
+                  <stop offset="0%" stop-color="#3b5bdb" stop-opacity=".18"/>
+                  <stop offset="100%" stop-color="#3b5bdb" stop-opacity="0"/>
+                </linearGradient>
+              </defs>
+              <!-- 格線與 Y 軸 -->
+              <line class="grid-line" x1="40" y1="20"  x2="710" y2="20"/>
+              <line class="grid-line" x1="40" y1="70"  x2="710" y2="70"/>
+              <line class="grid-line" x1="40" y1="120" x2="710" y2="120"/>
+              <line class="grid-line" x1="40" y1="170" x2="710" y2="170"/>
+              <line class="grid-line" x1="40" y1="220" x2="710" y2="220"/>
+              <text class="axis-text" x="34" y="24"  text-anchor="end">50萬</text>
+              <text class="axis-text" x="34" y="74"  text-anchor="end">45萬</text>
+              <text class="axis-text" x="34" y="124" text-anchor="end">40萬</text>
+              <text class="axis-text" x="34" y="174" text-anchor="end">35萬</text>
+              <text class="axis-text" x="34" y="224" text-anchor="end">30萬</text>
+              <!-- 面積 -->
+              <path fill="url(#revFill)" d="M48,168 L98,152 L148,179 L198,131 L248,118 L298,89 L348,62 L398,75 L448,124 L498,108 L548,82 L598,68 L648,49 L698,34 L698,220 L48,220 Z"/>
+              <!-- 折線 -->
+              <polyline fill="none" stroke="#3b5bdb" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"
+                points="48,168 98,152 148,179 198,131 248,118 298,89 348,62 398,75 448,124 498,108 548,82 598,68 648,49 698,34"/>
+              <!-- 資料點（title 提供原生 tooltip） -->
+              <g fill="#fff" stroke="#3b5bdb" stroke-width="2">
+                <circle cx="48"  cy="168" r="3.5"><title>6/21（日）NT$352,400</title></circle>
+                <circle cx="98"  cy="152" r="3.5"><title>6/22（一）NT$368,100</title></circle>
+                <circle cx="148" cy="179" r="3.5"><title>6/23（二）NT$341,250</title></circle>
+                <circle cx="198" cy="131" r="3.5"><title>6/24（三）NT$389,060</title></circle>
+                <circle cx="248" cy="118" r="3.5"><title>6/25（四）NT$402,380</title></circle>
+                <circle cx="298" cy="89"  r="3.5"><title>6/26（五）NT$431,720</title></circle>
+                <circle cx="348" cy="62"  r="3.5"><title>6/27（六）NT$458,940</title></circle>
+                <circle cx="398" cy="75"  r="3.5"><title>6/28（日）NT$445,300</title></circle>
+                <circle cx="448" cy="124" r="3.5"><title>6/29（一）NT$396,820</title></circle>
+                <circle cx="498" cy="108" r="3.5"><title>6/30（二）NT$412,540</title></circle>
+                <circle cx="548" cy="82"  r="3.5"><title>7/1（三）NT$438,660</title></circle>
+                <circle cx="598" cy="68"  r="3.5"><title>7/2（四）NT$452,190</title></circle>
+                <circle cx="648" cy="49"  r="3.5"><title>7/3（五）NT$471,830</title></circle>
+                <circle cx="698" cy="34"  r="4.5" stroke-width="2.5"><title>7/4（六）NT$486,320（截至 14:35）</title></circle>
+              </g>
+              <!-- X 軸標籤 -->
+              <text class="axis-text" x="48"  y="242" text-anchor="middle">6/21</text>
+              <text class="axis-text" x="148" y="242" text-anchor="middle">6/23</text>
+              <text class="axis-text" x="248" y="242" text-anchor="middle">6/25</text>
+              <text class="axis-text" x="348" y="242" text-anchor="middle">6/27</text>
+              <text class="axis-text" x="448" y="242" text-anchor="middle">6/29</text>
+              <text class="axis-text" x="548" y="242" text-anchor="middle">7/1</text>
+              <text class="axis-text" x="648" y="242" text-anchor="middle">7/3</text>
+            </svg>
+          </div>
+          <div class="chart-legend" style="padding-bottom:14px">
+            <span><i style="background:#3b5bdb"></i>每日營收</span>
+            <span style="color:var(--text-3)">週末（6/27–28）為近兩週高峰，年中慶檔期自 7/1 起帶動回升</span>
+          </div>
+        </article>
+
+        <!-- 通路占比（甜甜圈） -->
+        <article class="card">
+          <div class="card-head">
+            <div>
+              <h2>通路營收占比</h2>
+              <div class="sub">近 14 日，總計 NT$5,847,510</div>
+            </div>
+          </div>
+          <div class="card-body">
+            <div class="donut-wrap">
+              <div class="donut">
+                <svg viewBox="0 0 160 160" role="img" aria-label="通路營收占比：官網 42%、蝦皮 26%、momo 19%、門市 13%">
+                  <circle cx="80" cy="80" r="60" fill="none" stroke="#eef0f5" stroke-width="20"/>
+                  <circle cx="80" cy="80" r="60" fill="none" stroke="#3b5bdb" stroke-width="20"
+                    stroke-dasharray="158.3 376.99" stroke-dashoffset="0"><title>官網 42%</title></circle>
+                  <circle cx="80" cy="80" r="60" fill="none" stroke="#f76707" stroke-width="20"
+                    stroke-dasharray="98.0 376.99" stroke-dashoffset="-158.3"><title>蝦皮購物 26%</title></circle>
+                  <circle cx="80" cy="80" r="60" fill="none" stroke="#0ca678" stroke-width="20"
+                    stroke-dasharray="71.6 376.99" stroke-dashoffset="-256.3"><title>momo 購物網 19%</title></circle>
+                  <circle cx="80" cy="80" r="60" fill="none" stroke="#845ef7" stroke-width="20"
+                    stroke-dasharray="49.0 376.99" stroke-dashoffset="-327.9"><title>實體門市 13%</title></circle>
+                </svg>
+                <div class="donut-center">
+                  <b class="num">42%</b>
+                  <span>官網貢獻最高</span>
+                </div>
+              </div>
+              <div class="donut-legend">
+                <div class="row"><i style="background:#3b5bdb"></i><span class="name">品牌官網</span><span class="pct num">42%</span><span class="amt num">NT$2,455,950</span></div>
+                <div class="row"><i style="background:#f76707"></i><span class="name">蝦皮購物</span><span class="pct num">26%</span><span class="amt num">NT$1,520,350</span></div>
+                <div class="row"><i style="background:#0ca678"></i><span class="name">momo 購物網</span><span class="pct num">19%</span><span class="amt num">NT$1,111,030</span></div>
+                <div class="row"><i style="background:#845ef7"></i><span class="name">實體門市</span><span class="pct num">13%</span><span class="amt num">NT$760,180</span></div>
+              </div>
+            </div>
+          </div>
+        </article>
+
+      </section>
+
+      <!-- ============ 熱銷 + 訂單表格 ============ -->
+      <section class="bottom-row">
+
+        <!-- 熱銷商品 TOP 5 -->
+        <article class="card">
+          <div class="card-head">
+            <div>
+              <h2>熱銷商品 TOP 5</h2>
+              <div class="sub">近 14 日銷售額</div>
+            </div>
+            <a class="link" href="#">完整排行 →</a>
+          </div>
+          <div class="card-body">
+            <div class="hbar-list">
+              <div class="hbar">
+                <div class="meta"><span><span class="rank">1</span>AirPods Pro 3 主動降噪耳機</span><span class="amt num">NT$412,800</span></div>
+                <div class="track"><div class="fill" style="width:100%"></div></div>
+              </div>
+              <div class="hbar">
+                <div class="meta"><span><span class="rank">2</span>象印不鏽鋼保溫瓶 480ml</span><span class="amt num">NT$286,440</span></div>
+                <div class="track"><div class="fill" style="width:69%"></div></div>
+              </div>
+              <div class="hbar">
+                <div class="meta"><span><span class="rank">3</span>Panasonic 奈米水離子吹風機</span><span class="amt num">NT$243,150</span></div>
+                <div class="track"><div class="fill" style="width:59%"></div></div>
+              </div>
+              <div class="hbar">
+                <div class="meta"><span><span class="rank">4</span>羅技 MX Master 3S 無線滑鼠</span><span class="amt num">NT$198,660</span></div>
+                <div class="track"><div class="fill" style="width:48%"></div></div>
+              </div>
+              <div class="hbar">
+                <div class="meta"><span><span class="rank">5</span>舒潔抽取式衛生紙（24 包）</span><span class="amt num">NT$176,320</span></div>
+                <div class="track"><div class="fill" style="width:43%"></div></div>
+              </div>
+            </div>
+          </div>
+        </article>
+
+        <!-- 最新訂單 -->
+        <article class="card">
+          <div class="card-head">
+            <div>
+              <h2>最新訂單</h2>
+              <div class="sub">今日共 412 筆，以下為最近 10 筆</div>
+            </div>
+            <a class="link" href="#">前往訂單管理 →</a>
+          </div>
+          <div class="table-scroll">
+            <table>
+              <thead>
+                <tr>
+                  <th>訂單編號</th>
+                  <th>客戶</th>
+                  <th>商品</th>
+                  <th class="r">金額</th>
+                  <th>付款方式</th>
+                  <th>狀態</th>
+                  <th class="r">時間</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td><span class="oid">OD-20260704-0912</span></td>
+                  <td><span class="cust">陳冠宇</span></td>
+                  <td><div class="prod">AirPods Pro 3 主動降噪耳機</div></td>
+                  <td class="r"><span class="amt num">NT$7,490</span></td>
+                  <td>信用卡</td>
+                  <td><span class="badge ship">已出貨</span></td>
+                  <td class="r num">14:32</td>
+                </tr>
+                <tr>
+                  <td><span class="oid">OD-20260704-0911</span></td>
+                  <td><span class="cust">林怡君</span></td>
+                  <td><div class="prod">象印保溫瓶 480ml 等 3 件</div></td>
+                  <td class="r"><span class="amt num">NT$2,180</span></td>
+                  <td>LINE Pay</td>
+                  <td><span class="badge proc">處理中</span></td>
+                  <td class="r num">14:27</td>
+                </tr>
+                <tr>
+                  <td><span class="oid">OD-20260704-0910</span></td>
+                  <td><span class="cust">張家豪</span></td>
+                  <td><div class="prod">羅技 MX Master 3S 無線滑鼠</div></td>
+                  <td class="r"><span class="amt num">NT$3,290</span></td>
+                  <td>信用卡</td>
+                  <td><span class="badge done">已完成</span></td>
+                  <td class="r num">14:15</td>
+                </tr>
+                <tr>
+                  <td><span class="oid">OD-20260704-0909</span></td>
+                  <td><span class="cust">黃郁婷</span></td>
+                  <td><div class="prod">UNIQLO 涼感圓領 T 恤 ×3</div></td>
+                  <td class="r"><span class="amt num">NT$1,170</span></td>
+                  <td>貨到付款</td>
+                  <td><span class="badge proc">處理中</span></td>
+                  <td class="r num">14:02</td>
+                </tr>
+                <tr>
+                  <td><span class="oid">OD-20260704-0908</span></td>
+                  <td><span class="cust">王柏翰</span></td>
+                  <td><div class="prod">Panasonic 奈米水離子吹風機</div></td>
+                  <td class="r"><span class="amt num">NT$5,990</span></td>
+                  <td>Apple Pay</td>
+                  <td><span class="badge ship">已出貨</span></td>
+                  <td class="r num">13:48</td>
+                </tr>
+                <tr>
+                  <td><span class="oid">OD-20260704-0907</span></td>
+                  <td><span class="cust">吳佩珊</span></td>
+                  <td><div class="prod">樂事洋芋片箱購組（12 入）</div></td>
+                  <td class="r"><span class="amt num">NT$589</span></td>
+                  <td>超商取貨付款</td>
+                  <td><span class="badge wait">待付款</span></td>
+                  <td class="r num">13:41</td>
+                </tr>
+                <tr>
+                  <td><span class="oid">OD-20260704-0906</span></td>
+                  <td><span class="cust">李承翰</span></td>
+                  <td><div class="prod">Switch 2 主機同捆組</div></td>
+                  <td class="r"><span class="amt num">NT$14,980</span></td>
+                  <td>信用卡分期</td>
+                  <td><span class="badge done">已完成</span></td>
+                  <td class="r num">13:26</td>
+                </tr>
+                <tr>
+                  <td><span class="oid">OD-20260704-0905</span></td>
+                  <td><span class="cust">蔡雅雯</span></td>
+                  <td><div class="prod">舒潔抽取式衛生紙（24 包）</div></td>
+                  <td class="r"><span class="amt num">NT$699</span></td>
+                  <td>LINE Pay</td>
+                  <td><span class="badge cancel">已取消</span></td>
+                  <td class="r num">13:10</td>
+                </tr>
+                <tr>
+                  <td><span class="oid">OD-20260704-0904</span></td>
+                  <td><span class="cust">劉建宏</span></td>
+                  <td><div class="prod">Dyson V12 無線吸塵器</div></td>
+                  <td class="r"><span class="amt num">NT$18,900</span></td>
+                  <td>信用卡</td>
+                  <td><span class="badge refund">退貨處理</span></td>
+                  <td class="r num">12:54</td>
+                </tr>
+                <tr>
+                  <td><span class="oid">OD-20260704-0903</span></td>
+                  <td><span class="cust">許家瑜</span></td>
+                  <td><div class="prod">桂格燕麥飲禮盒（36 入）</div></td>
+                  <td class="r"><span class="amt num">NT$880</span></td>
+                  <td>街口支付</td>
+                  <td><span class="badge done">已完成</span></td>
+                  <td class="r num">12:47</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+          <div class="table-foot">
+            <span>顯示第 1–10 筆，共 <b class="num">412</b> 筆</span>
+            <div class="pager">
+              <button aria-label="上一頁">‹</button>
+              <button class="on">1</button>
+              <button>2</button>
+              <button>3</button>
+              <button>…</button>
+              <button>42</button>
+              <button aria-label="下一頁">›</button>
+            </div>
+          </div>
+        </article>
+
+      </section>
+    </div>
+  </div>
+</div>
+
+<script>
+  // 行動版側邊欄開合（唯一的 JS，無任何函式庫）
+  const menuBtn = document.getElementById('menuBtn');
+  menuBtn.addEventListener('click', () => document.body.classList.toggle('nav-open'));
+  document.addEventListener('click', (e) => {
+    if (document.body.classList.contains('nav-open') &&
+        !document.getElementById('sidebar').contains(e.target) &&
+        !menuBtn.contains(e.target)) {
+      document.body.classList.remove('nav-open');
+    }
+  });
+</script>
+</body>
+</html>

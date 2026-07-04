@@ -1,0 +1,1128 @@
+<!DOCTYPE html>
+<html lang="zh-Hant-TW">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="description" content="Pulse 脈搏 — 電商營運分析平台：營收、訂單、轉換率與分類銷售一站掌握。">
+<meta name="color-scheme" content="light dark">
+<meta name="theme-color" media="(prefers-color-scheme: light)" content="#f5f7f9">
+<meta name="theme-color" media="(prefers-color-scheme: dark)" content="#0a0d13">
+<title>營運總覽 ─ Pulse 脈搏</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Noto+Sans+TC:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+/* ---------- Tokens ---------- */
+:root {
+  color-scheme: light dark;
+
+  --bg: oklch(0.975 0.004 258);
+  --surface: oklch(1 0 0);
+  --border: oklch(0.90 0.008 258);
+  --border-strong: oklch(0.84 0.012 258);
+  --ink: oklch(0.24 0.02 262);
+  --muted: oklch(0.46 0.02 262);
+  --accent: oklch(0.49 0.19 262);
+  --accent-hover: oklch(0.43 0.19 262);
+  --accent-soft: oklch(0.955 0.02 262);
+  --ring: oklch(0.49 0.19 262);
+
+  --sb-bg: oklch(0.25 0.03 265);
+  --sb-ink: oklch(0.93 0.01 262);
+  --sb-muted: oklch(0.70 0.02 262);
+  --sb-hover: oklch(1 0 0 / 0.06);
+  --sb-active: oklch(0.33 0.06 262);
+  --sb-border: oklch(1 0 0 / 0.09);
+  --sb-ring: oklch(0.80 0.10 262);
+
+  --chart-line: oklch(0.49 0.19 262);
+  --chart-fill: oklch(0.49 0.19 262 / 0.10);
+  --grid-line: oklch(0.90 0.008 258);
+
+  --up-text: oklch(0.43 0.12 150);
+  --up-bg: oklch(0.955 0.035 150);
+  --down-text: oklch(0.44 0.16 27);
+  --down-bg: oklch(0.955 0.025 27);
+
+  --st-proc-t: oklch(0.42 0.16 262);  --st-proc-b: oklch(0.95 0.025 262);
+  --st-unpaid-t: oklch(0.45 0.11 75); --st-unpaid-b: oklch(0.96 0.045 85);
+  --st-ship-t: oklch(0.42 0.09 195);  --st-ship-b: oklch(0.955 0.03 195);
+  --st-done-t: oklch(0.43 0.12 150);  --st-done-b: oklch(0.955 0.035 150);
+  --st-ref-t: oklch(0.44 0.16 27);    --st-ref-b: oklch(0.955 0.025 27);
+
+  --badge-bg: oklch(0.50 0.17 27);
+
+  --row-hover: color-mix(in oklab, var(--accent) 4%, var(--surface));
+  --shadow-card: 0 1px 2px oklch(0.2 0.02 262 / 0.05);
+  --shadow-pop: 0 8px 12px -6px oklch(0.2 0.02 262 / 0.18);
+
+  --z-sticky: 10;
+  --z-backdrop: 30;
+  --z-drawer: 40;
+  --z-popover: 50;
+
+  --r-card: 12px;
+  --r-ctl: 8px;
+
+  --font: "Inter", "Noto Sans TC", system-ui, -apple-system, "PingFang TC", "Microsoft JhengHei", sans-serif;
+}
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg: oklch(0.16 0.012 262);
+    --surface: oklch(0.205 0.014 262);
+    --border: oklch(0.30 0.015 262);
+    --border-strong: oklch(0.36 0.018 262);
+    --ink: oklch(0.93 0.008 262);
+    --muted: oklch(0.72 0.015 262);
+    --accent: oklch(0.74 0.13 262);
+    --accent-hover: oklch(0.80 0.11 262);
+    --accent-soft: oklch(0.29 0.05 262);
+    --ring: oklch(0.74 0.13 262);
+
+    --sb-bg: oklch(0.14 0.012 262);
+    --sb-ink: oklch(0.92 0.008 262);
+    --sb-muted: oklch(0.68 0.015 262);
+    --sb-hover: oklch(1 0 0 / 0.07);
+    --sb-active: oklch(0.27 0.05 262);
+    --sb-border: oklch(1 0 0 / 0.08);
+    --sb-ring: oklch(0.80 0.10 262);
+
+    --chart-line: oklch(0.74 0.13 262);
+    --chart-fill: oklch(0.74 0.13 262 / 0.12);
+    --grid-line: oklch(0.28 0.015 262);
+
+    --up-text: oklch(0.82 0.11 150);  --up-bg: oklch(0.27 0.045 150);
+    --down-text: oklch(0.78 0.11 27); --down-bg: oklch(0.27 0.04 27);
+
+    --st-proc-t: oklch(0.80 0.10 262); --st-proc-b: oklch(0.28 0.05 262);
+    --st-unpaid-t: oklch(0.82 0.11 85);--st-unpaid-b: oklch(0.28 0.045 85);
+    --st-ship-t: oklch(0.80 0.09 195); --st-ship-b: oklch(0.27 0.04 195);
+    --st-done-t: oklch(0.82 0.11 150); --st-done-b: oklch(0.27 0.045 150);
+    --st-ref-t: oklch(0.78 0.11 27);   --st-ref-b: oklch(0.27 0.04 27);
+
+    --shadow-card: 0 1px 2px oklch(0 0 0 / 0.3);
+    --shadow-pop: 0 8px 12px -6px oklch(0 0 0 / 0.5);
+  }
+}
+
+/* ---------- Base ---------- */
+*, *::before, *::after { box-sizing: border-box; }
+html { height: 100%; }
+body {
+  margin: 0;
+  min-height: 100%;
+  font-family: var(--font);
+  font-size: 0.875rem;
+  line-height: 1.55;
+  color: var(--ink);
+  background: var(--bg);
+  -webkit-tap-highlight-color: transparent;
+}
+h1, h2, h3 { margin: 0; text-wrap: balance; }
+p { margin: 0; }
+a { color: var(--accent); text-decoration: none; }
+a:hover { color: var(--accent-hover); text-decoration: underline; }
+button, input, select { font: inherit; color: inherit; }
+button, a, select, input[type="search"] { touch-action: manipulation; }
+:focus-visible { outline: 2px solid var(--ring); outline-offset: 2px; border-radius: 4px; }
+[id] { scroll-margin-top: 84px; }
+.num { font-variant-numeric: tabular-nums; }
+
+.sr-only {
+  position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px;
+  overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; border: 0;
+}
+.skip-link {
+  position: absolute; left: 16px; top: -48px;
+  z-index: calc(var(--z-popover) + 1);
+  padding: 10px 16px; border-radius: var(--r-ctl);
+  background: var(--surface); color: var(--accent);
+  border: 1px solid var(--border-strong); font-weight: 600;
+}
+.skip-link:focus { top: 16px; }
+
+/* ---------- App frame ---------- */
+.app { display: grid; grid-template-columns: 240px minmax(0, 1fr); min-height: 100dvh; }
+
+/* ---------- Sidebar ---------- */
+.sidebar {
+  background: var(--sb-bg); color: var(--sb-ink);
+  display: flex; flex-direction: column;
+  position: sticky; top: 0; height: 100dvh;
+  overscroll-behavior: contain; overflow-y: auto;
+}
+.sidebar :focus-visible { outline-color: var(--sb-ring); }
+.sb-head { display: flex; align-items: center; gap: 10px; padding: 18px 16px 14px; }
+.logo-mark {
+  flex: none; width: 30px; height: 30px; border-radius: 8px;
+  background: oklch(0.49 0.19 262); color: #fff;
+  display: grid; place-items: center;
+}
+.brand { line-height: 1.25; }
+.brand-name { font-weight: 700; font-size: 0.9375rem; letter-spacing: 0.01em; }
+.brand-sub { font-size: 0.6875rem; color: var(--sb-muted); }
+.sidebar .sb-close { display: none; margin-left: auto; }
+
+.sb-nav { flex: 1 1 auto; padding: 4px 10px 12px; }
+.nav-label {
+  display: block; padding: 14px 8px 4px;
+  font-size: 0.6875rem; font-weight: 500; color: var(--sb-muted);
+}
+.sb-nav ul { list-style: none; margin: 0; padding: 0; }
+.sb-nav a {
+  display: flex; align-items: center; gap: 10px;
+  padding: 7px 8px; border-radius: 8px;
+  color: var(--sb-ink); font-size: 0.8125rem; text-decoration: none;
+  transition: background-color 150ms ease-out, color 150ms ease-out;
+}
+.sb-nav a .nav-ico { flex: none; color: var(--sb-muted); transition: color 150ms ease-out; }
+.sb-nav a:hover { background: var(--sb-hover); color: #fff; text-decoration: none; }
+.sb-nav a:hover .nav-ico { color: var(--sb-ink); }
+.sb-nav a[aria-current="page"] { background: var(--sb-active); color: #fff; font-weight: 600; }
+.sb-nav a[aria-current="page"] .nav-ico { color: #fff; }
+.nav-count {
+  margin-left: auto; padding: 1px 7px; border-radius: 999px;
+  background: var(--sb-hover); color: var(--sb-ink);
+  font-size: 0.6875rem; font-weight: 600;
+}
+.sb-foot { border-top: 1px solid var(--sb-border); padding: 10px 10px calc(10px + env(safe-area-inset-bottom)); }
+.sb-foot .help-link {
+  display: flex; align-items: center; gap: 10px;
+  padding: 7px 8px; border-radius: 8px; color: var(--sb-muted);
+  font-size: 0.8125rem; text-decoration: none;
+  transition: background-color 150ms ease-out, color 150ms ease-out;
+}
+.sb-foot .help-link:hover { background: var(--sb-hover); color: var(--sb-ink); }
+.user-card { display: flex; align-items: center; gap: 10px; padding: 10px 8px 4px; }
+.avatar {
+  flex: none; width: 32px; height: 32px; border-radius: 50%;
+  display: grid; place-items: center;
+  background: var(--sb-active); color: var(--sb-ink);
+  font-size: 0.8125rem; font-weight: 600;
+}
+.user-name { font-size: 0.8125rem; font-weight: 600; line-height: 1.3; }
+.user-role { font-size: 0.6875rem; color: var(--sb-muted); }
+
+/* ---------- Topbar ---------- */
+.frame { display: flex; flex-direction: column; min-width: 0; }
+.topbar {
+  position: sticky; top: 0; z-index: var(--z-sticky);
+  display: flex; align-items: center; gap: 12px;
+  height: 60px; padding: 0 24px;
+  background: var(--surface); border-bottom: 1px solid var(--border);
+}
+.topbar .menu-btn { display: none; }
+.crumbs ol { display: flex; align-items: center; gap: 8px; list-style: none; margin: 0; padding: 0; font-size: 0.8125rem; }
+.crumbs a { color: var(--muted); }
+.crumbs a:hover { color: var(--ink); }
+.crumbs li + li::before { content: "›" / ""; margin-right: 8px; color: var(--muted); }
+.crumbs [aria-current="page"] { color: var(--ink); font-weight: 600; }
+.topbar-right { margin-left: auto; display: flex; align-items: center; gap: 8px; }
+
+.icon-btn {
+  position: relative;
+  display: inline-grid; place-items: center;
+  width: 38px; height: 38px; border-radius: var(--r-ctl);
+  border: none; background: transparent; color: var(--muted);
+  cursor: pointer;
+  transition: background-color 150ms ease-out, color 150ms ease-out;
+}
+.icon-btn:hover { background: var(--bg); color: var(--ink); }
+.notif-badge {
+  position: absolute; top: 5px; right: 5px;
+  min-width: 16px; height: 16px; padding: 0 4px; border-radius: 999px;
+  background: var(--badge-bg); color: #fff;
+  font-size: 0.625rem; font-weight: 700; line-height: 16px; text-align: center;
+}
+.user-chip { display: flex; align-items: center; gap: 8px; padding-left: 8px; border-left: 1px solid var(--border); }
+.user-chip .avatar { width: 30px; height: 30px; background: var(--accent-soft); color: var(--accent); }
+.user-chip .user-name { font-size: 0.8125rem; }
+
+/* Notifications popover */
+.notif-wrap { position: relative; }
+.popover {
+  position: absolute; right: 0; top: calc(100% + 8px);
+  width: min(340px, calc(100vw - 24px));
+  background: var(--surface); border: 1px solid var(--border);
+  border-radius: var(--r-card); box-shadow: var(--shadow-pop);
+  z-index: var(--z-popover);
+  overscroll-behavior: contain;
+}
+.popover-head {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 12px 16px; border-bottom: 1px solid var(--border);
+}
+.popover-title { font-size: 0.875rem; font-weight: 600; }
+.text-btn {
+  border: none; background: none; padding: 4px 6px; border-radius: 6px;
+  color: var(--accent); font-size: 0.75rem; font-weight: 500; cursor: pointer;
+  transition: background-color 150ms ease-out, color 150ms ease-out;
+}
+.text-btn:hover { background: var(--accent-soft); color: var(--accent-hover); }
+.text-btn:disabled { color: var(--muted); cursor: default; background: none; }
+.notif-list { list-style: none; margin: 0; padding: 6px; }
+.notif-list a {
+  display: grid; grid-template-columns: 10px minmax(0, 1fr); gap: 8px;
+  padding: 10px; border-radius: 8px; color: var(--ink); text-decoration: none;
+  transition: background-color 150ms ease-out;
+}
+.notif-list a:hover { background: var(--bg); }
+.notif-dot { width: 7px; height: 7px; border-radius: 50%; margin-top: 6px; background: transparent; }
+.unread .notif-dot { background: var(--accent); }
+.notif-text { font-size: 0.8125rem; line-height: 1.45; }
+.notif-time { display: block; margin-top: 2px; font-size: 0.6875rem; color: var(--muted); }
+
+/* ---------- Main ---------- */
+main { flex: 1; width: 100%; max-width: 1440px; margin: 0 auto; padding: 24px 24px calc(24px + env(safe-area-inset-bottom)); }
+.page-head { display: flex; flex-wrap: wrap; align-items: baseline; gap: 8px 16px; margin-bottom: 20px; }
+.page-head h1 { font-size: 1.25rem; font-weight: 700; letter-spacing: -0.01em; }
+.page-meta { color: var(--muted); font-size: 0.8125rem; }
+
+.card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--r-card);
+  box-shadow: var(--shadow-card);
+}
+.card-head {
+  display: flex; flex-wrap: wrap; align-items: center; gap: 8px 16px;
+  padding: 16px 20px 0;
+}
+.card-head h2 { font-size: 0.9375rem; font-weight: 600; }
+.card-head .spacer { margin-left: auto; }
+.card-link { font-size: 0.8125rem; }
+
+/* KPI */
+.kpi-grid { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 16px; }
+.kpi { padding: 16px 18px 14px; min-width: 0; }
+.kpi-top { display: flex; align-items: flex-start; justify-content: space-between; gap: 8px; }
+.kpi h3 { font-size: 0.8125rem; font-weight: 500; color: var(--muted); }
+.kpi-value { margin-top: 6px; font-size: 1.5rem; font-weight: 700; letter-spacing: -0.01em; line-height: 1.2; }
+.kpi-delta { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; margin-top: 8px; }
+.chip {
+  display: inline-flex; align-items: center; gap: 3px;
+  padding: 1px 7px; border-radius: 999px;
+  font-size: 0.75rem; font-weight: 600;
+  font-variant-numeric: tabular-nums;
+}
+.chip svg { flex: none; }
+.chip.up { color: var(--up-text); background: var(--up-bg); }
+.chip.down { color: var(--down-text); background: var(--down-bg); }
+.kpi-compare { font-size: 0.75rem; color: var(--muted); }
+.spark { display: block; width: 100%; max-width: 148px; height: 28px; margin-top: 10px; color: var(--chart-line); }
+
+/* Charts */
+.charts { display: grid; grid-template-columns: minmax(0, 1.7fr) minmax(0, 1fr); gap: 16px; margin-top: 16px; }
+.chart-card .card-head { padding-bottom: 4px; }
+.chart-summary { padding: 0 20px; font-size: 0.75rem; color: var(--muted); }
+.chart-body { padding: 8px 20px 16px; }
+.rev-chart { display: block; width: 100%; height: auto; }
+.rev-chart .tick { font-size: 11px; fill: var(--muted); font-variant-numeric: tabular-nums; }
+.rev-chart .note { font-size: 11px; font-weight: 600; fill: var(--ink); font-variant-numeric: tabular-nums; }
+
+.seg { display: inline-flex; gap: 2px; padding: 2px; border: 1px solid var(--border); border-radius: var(--r-ctl); background: var(--bg); }
+.seg button {
+  border: none; background: none; cursor: pointer;
+  padding: 4px 10px; border-radius: 6px;
+  font-size: 0.75rem; font-weight: 500; color: var(--muted);
+  transition: background-color 150ms ease-out, color 150ms ease-out;
+}
+.seg button:hover { color: var(--ink); }
+.seg button[aria-pressed="true"] { background: var(--surface); color: var(--accent); font-weight: 600; box-shadow: var(--shadow-card); }
+
+/* Category bars */
+.cat-list { list-style: none; margin: 0; padding: 12px 20px 4px; }
+.cat-list li {
+  display: grid;
+  grid-template-columns: 88px minmax(0, 1fr) 100px 44px;
+  align-items: center; gap: 12px;
+  padding: 8px 0;
+}
+.cat-name { font-size: 0.8125rem; }
+.cat-track { display: block; height: 8px; border-radius: 999px; background: var(--bg); border: 1px solid var(--border); overflow: hidden; }
+.cat-fill { display: block; height: 100%; border-radius: 999px; background: var(--chart-line); }
+.cat-amt { font-size: 0.8125rem; text-align: right; font-variant-numeric: tabular-nums; white-space: nowrap; }
+.cat-pct { font-size: 0.75rem; color: var(--muted); text-align: right; font-variant-numeric: tabular-nums; }
+.cat-foot { padding: 10px 20px 16px; border-top: 1px solid var(--border); margin-top: 8px; font-size: 0.75rem; color: var(--muted); }
+.cat-foot strong { color: var(--ink); font-variant-numeric: tabular-nums; font-weight: 600; }
+
+/* ---------- Orders ---------- */
+.orders-card { margin-top: 16px; }
+.orders-toolbar {
+  display: flex; flex-wrap: wrap; align-items: center; gap: 10px;
+  padding: 12px 20px;
+}
+.search-field { position: relative; flex: 1 1 240px; max-width: 340px; }
+.search-field svg { position: absolute; left: 10px; top: 50%; translate: 0 -50%; color: var(--muted); pointer-events: none; }
+.search-field input {
+  width: 100%; padding: 7px 56px 7px 34px;
+  border: 1px solid var(--border-strong); border-radius: var(--r-ctl);
+  background: var(--surface); color: var(--ink);
+  transition: border-color 150ms ease-out;
+}
+.search-field input::placeholder { color: var(--muted); opacity: 1; }
+.search-field input:hover { border-color: var(--muted); }
+.search-field kbd {
+  position: absolute; right: 8px; top: 50%; translate: 0 -50%;
+  padding: 1px 6px; border: 1px solid var(--border); border-radius: 5px;
+  background: var(--bg); color: var(--muted);
+  font-family: var(--font); font-size: 0.6875rem;
+}
+.field-row { display: flex; align-items: center; gap: 8px; }
+.field-row label { font-size: 0.8125rem; color: var(--muted); }
+select {
+  padding: 7px 10px;
+  border: 1px solid var(--border-strong); border-radius: var(--r-ctl);
+  background-color: var(--surface); color: var(--ink);
+  cursor: pointer;
+  transition: border-color 150ms ease-out;
+}
+select:hover { border-color: var(--muted); }
+
+.btn {
+  display: inline-flex; align-items: center; gap: 6px;
+  padding: 7px 14px;
+  border: 1px solid var(--border-strong); border-radius: var(--r-ctl);
+  background: var(--surface); color: var(--ink);
+  font-size: 0.8125rem; font-weight: 500; cursor: pointer;
+  transition: background-color 150ms ease-out, border-color 150ms ease-out;
+}
+.btn:hover { background: var(--bg); border-color: var(--muted); }
+.btn:active { background: var(--border); }
+.btn svg { color: var(--muted); }
+
+.table-wrap { overflow-x: auto; border-top: 1px solid var(--border); }
+.table-wrap:focus-visible { outline-offset: -2px; }
+table { width: 100%; min-width: 780px; border-collapse: collapse; font-size: 0.8125rem; }
+thead th {
+  padding: 9px 12px; text-align: left;
+  font-size: 0.75rem; font-weight: 600; color: var(--muted);
+  border-bottom: 1px solid var(--border);
+  background: var(--surface);
+  white-space: nowrap;
+}
+tbody th, tbody td { padding: 11px 12px; border-bottom: 1px solid var(--border); vertical-align: top; }
+tbody tr { transition: background-color 120ms ease-out; }
+tbody tr:hover { background: var(--row-hover); }
+tbody tr:last-child th, tbody tr:last-child td { border-bottom: none; }
+th.col-amt, td.col-amt { text-align: right; }
+td.col-amt { font-variant-numeric: tabular-nums; white-space: nowrap; }
+tbody th { font-weight: 500; white-space: nowrap; }
+.order-id { font-variant-numeric: tabular-nums; font-weight: 500; }
+.order-id:hover { text-decoration: underline; }
+.cell-product { max-width: 280px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.cell-time { color: var(--muted); white-space: nowrap; font-variant-numeric: tabular-nums; }
+.cell-pay { white-space: nowrap; }
+
+.status {
+  display: inline-flex; align-items: center; gap: 6px;
+  padding: 2px 9px; border-radius: 999px;
+  font-size: 0.75rem; font-weight: 500; white-space: nowrap;
+}
+.status::before { content: ""; width: 6px; height: 6px; border-radius: 50%; background: currentColor; }
+.status.processing { color: var(--st-proc-t); background: var(--st-proc-b); }
+.status.unpaid { color: var(--st-unpaid-t); background: var(--st-unpaid-b); }
+.status.shipped { color: var(--st-ship-t); background: var(--st-ship-b); }
+.status.done { color: var(--st-done-t); background: var(--st-done-b); }
+.status.refund { color: var(--st-ref-t); background: var(--st-ref-b); }
+
+.empty-row td { padding: 32px 16px; text-align: center; color: var(--muted); }
+.empty-row .btn { margin-left: 10px; }
+
+.table-foot {
+  display: flex; flex-wrap: wrap; align-items: center; gap: 10px 16px;
+  padding: 12px 20px;
+}
+.count-note { font-size: 0.75rem; color: var(--muted); font-variant-numeric: tabular-nums; }
+.pager { margin-left: auto; }
+.pager ul { display: flex; align-items: center; gap: 4px; list-style: none; margin: 0; padding: 0; }
+.pager a, .pager .page-gap, .pager .page-off {
+  display: inline-flex; align-items: center; justify-content: center;
+  min-width: 30px; height: 30px; padding: 0 8px; border-radius: 6px;
+  font-size: 0.75rem; font-variant-numeric: tabular-nums;
+}
+.pager a { color: var(--muted); text-decoration: none; transition: background-color 150ms ease-out, color 150ms ease-out; }
+.pager a:hover { background: var(--bg); color: var(--ink); }
+.pager a[aria-current="page"] { background: var(--accent-soft); color: var(--accent); font-weight: 600; }
+.pager .page-gap, .pager .page-off { color: var(--muted); }
+
+.page-foot { margin-top: 24px; font-size: 0.75rem; color: var(--muted); }
+
+/* ---------- Backdrop / drawer ---------- */
+.backdrop {
+  position: fixed; inset: 0; z-index: var(--z-backdrop);
+  background: oklch(0.15 0.02 262 / 0.45);
+  border: none; padding: 0; margin: 0; cursor: pointer;
+}
+
+/* ---------- Responsive ---------- */
+@media (max-width: 1180px) {
+  .kpi-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .charts { grid-template-columns: minmax(0, 1fr); }
+}
+@media (max-width: 1023px) {
+  .app { grid-template-columns: minmax(0, 1fr); }
+  .sidebar {
+    position: fixed; inset: 0 auto 0 0; width: 268px;
+    z-index: var(--z-drawer);
+    translate: -103% 0;
+    transition: translate 220ms cubic-bezier(0.22, 1, 0.36, 1);
+    box-shadow: none;
+  }
+  .sidebar.open { translate: 0 0; box-shadow: var(--shadow-pop); }
+  .sidebar .sb-close { display: inline-grid; color: var(--sb-muted); }
+  .sidebar .sb-close:hover { background: var(--sb-hover); color: var(--sb-ink); }
+  .topbar .menu-btn { display: inline-grid; }
+  main { padding: 16px; }
+  .topbar { padding: 0 16px; }
+}
+@media (max-width: 640px) {
+  .kpi-grid { grid-template-columns: minmax(0, 1fr); }
+  .search-field kbd { display: none; }
+  .search-field input { padding-right: 12px; }
+  .user-chip .user-name { display: none; }
+  .cat-list li { grid-template-columns: 76px minmax(0, 1fr) 56px; }
+  .cat-amt { display: none; }
+  .pager { margin-left: 0; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+  html { scroll-behavior: auto; }
+}
+</style>
+</head>
+<body>
+<a class="skip-link" href="#main">跳至主要內容</a>
+
+<div class="app">
+  <!-- ============ 側邊欄 ============ -->
+  <aside class="sidebar" id="sidebar" aria-label="側邊選單">
+    <div class="sb-head">
+      <span class="logo-mark" aria-hidden="true">
+        <svg width="18" height="18" viewBox="0 0 28 28" fill="none" aria-hidden="true"><polyline points="4,15 9,15 12,8 16,20 19,13 24,13" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </span>
+      <span class="brand">
+        <span class="brand-name"><span translate="no">Pulse</span> 脈搏</span><br>
+        <span class="brand-sub">電商營運分析</span>
+      </span>
+      <button type="button" class="icon-btn sb-close" id="sb-close" aria-label="關閉選單">
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M3 3l10 10M13 3L3 13" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
+      </button>
+    </div>
+
+    <nav class="sb-nav" aria-label="主選單">
+      <span class="nav-label" id="nav-g1">分析</span>
+      <ul aria-labelledby="nav-g1">
+        <li><a href="#overview" aria-current="page">
+          <svg class="nav-ico" width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true"><rect x="1.5" y="1.5" width="5.3" height="5.3" rx="1.2" stroke="currentColor" stroke-width="1.5"/><rect x="9.2" y="1.5" width="5.3" height="5.3" rx="1.2" stroke="currentColor" stroke-width="1.5"/><rect x="1.5" y="9.2" width="5.3" height="5.3" rx="1.2" stroke="currentColor" stroke-width="1.5"/><rect x="9.2" y="9.2" width="5.3" height="5.3" rx="1.2" stroke="currentColor" stroke-width="1.5"/></svg>
+          總覽</a></li>
+        <li><a href="#revenue">
+          <svg class="nav-ico" width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true"><polyline points="1.5,9.5 4.5,9.5 6.5,4.5 9.5,12.5 11.5,8.5 14.5,8.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          即時看板</a></li>
+        <li><a href="#category">
+          <svg class="nav-ico" width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true"><rect x="2" y="8.5" width="3" height="5.5" rx="0.8" stroke="currentColor" stroke-width="1.5"/><rect x="6.5" y="5" width="3" height="9" rx="0.8" stroke="currentColor" stroke-width="1.5"/><rect x="11" y="2" width="3" height="12" rx="0.8" stroke="currentColor" stroke-width="1.5"/></svg>
+          銷售分析</a></li>
+      </ul>
+
+      <span class="nav-label" id="nav-g2">營運</span>
+      <ul aria-labelledby="nav-g2">
+        <li><a href="#orders">
+          <svg class="nav-ico" width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true"><rect x="3" y="1.5" width="10" height="13" rx="1.5" stroke="currentColor" stroke-width="1.5"/><path d="M5.5 5h5M5.5 8h5M5.5 11h3" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+          訂單管理
+          <span class="nav-count num">32<span class="sr-only">（32 筆待處理）</span></span></a></li>
+        <li><a href="#products">
+          <svg class="nav-ico" width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M8 1.5L14 4.5v7L8 14.5 2 11.5v-7L8 1.5Z" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/><path d="M2 4.5L8 7.5l6-3M8 7.5v7" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/></svg>
+          商品管理</a></li>
+        <li><a href="#customers">
+          <svg class="nav-ico" width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true"><circle cx="8" cy="5" r="3" stroke="currentColor" stroke-width="1.5"/><path d="M2.5 14c0-3 2.5-4.5 5.5-4.5s5.5 1.5 5.5 4.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+          客戶管理</a></li>
+        <li><a href="#campaigns">
+          <svg class="nav-ico" width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M2 6.5h2.2L11 3v10L4.2 9.5H2v-3Z" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/><path d="M13 5.5a3.5 3.5 0 0 1 0 5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+          行銷活動</a></li>
+      </ul>
+
+      <span class="nav-label" id="nav-g3">系統</span>
+      <ul aria-labelledby="nav-g3">
+        <li><a href="#reports">
+          <svg class="nav-ico" width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M4 1.5h6l3 3v10H4v-13Z" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/><path d="M10 1.5v3h3" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/></svg>
+          報表中心</a></li>
+        <li><a href="#billing">
+          <svg class="nav-ico" width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true"><rect x="1.5" y="4" width="13" height="8" rx="1.5" stroke="currentColor" stroke-width="1.5"/><circle cx="8" cy="8" r="2" stroke="currentColor" stroke-width="1.5"/></svg>
+          金流對帳</a></li>
+        <li><a href="#settings">
+          <svg class="nav-ico" width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M1.5 4h13M1.5 8h13M1.5 12h13" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/><circle cx="10.5" cy="4" r="1.7" fill="var(--sb-bg)" stroke="currentColor" stroke-width="1.5"/><circle cx="5.5" cy="8" r="1.7" fill="var(--sb-bg)" stroke="currentColor" stroke-width="1.5"/><circle cx="9" cy="12" r="1.7" fill="var(--sb-bg)" stroke="currentColor" stroke-width="1.5"/></svg>
+          系統設定</a></li>
+      </ul>
+    </nav>
+
+    <div class="sb-foot">
+      <a class="help-link" href="#help">
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true"><circle cx="8" cy="8" r="6.5" stroke="currentColor" stroke-width="1.5"/><path d="M6.2 6.2a1.9 1.9 0 1 1 2.6 1.8c-.5.2-.8.6-.8 1.1v.3" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/><circle cx="8" cy="11.6" r="0.8" fill="currentColor"/></svg>
+        說明中心
+      </a>
+      <div class="user-card">
+        <span class="avatar" aria-hidden="true">佩</span>
+        <span>
+          <span class="user-name">徐佩君</span><br>
+          <span class="user-role">營運經理</span>
+        </span>
+      </div>
+    </div>
+  </aside>
+
+  <button type="button" class="backdrop" id="backdrop" hidden tabindex="-1" aria-hidden="true"></button>
+
+  <div class="frame">
+    <!-- ============ 頂欄 ============ -->
+    <header class="topbar">
+      <button type="button" class="icon-btn menu-btn" id="menu-btn" aria-label="開啟選單" aria-controls="sidebar" aria-expanded="false">
+        <svg width="18" height="18" viewBox="0 0 18 18" fill="none" aria-hidden="true"><path d="M2.5 4.5h13M2.5 9h13M2.5 13.5h13" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
+      </button>
+
+      <nav class="crumbs" aria-label="頁面路徑">
+        <ol>
+          <li><a href="#overview">營運分析</a></li>
+          <li aria-current="page">總覽</li>
+        </ol>
+      </nav>
+
+      <div class="topbar-right">
+        <div class="notif-wrap">
+          <button type="button" class="icon-btn" id="notif-btn" aria-label="通知，3 則未讀" aria-haspopup="true" aria-expanded="false" aria-controls="notif-panel">
+            <svg width="18" height="18" viewBox="0 0 18 18" fill="none" aria-hidden="true"><path d="M3.8 13h10.4c-1.1-1.1-1.7-2.2-1.7-3.9V7.3a3.5 3.5 0 0 0-7 0v1.8c0 1.7-.6 2.8-1.7 3.9Z" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/><path d="M7.6 15.2a1.5 1.5 0 0 0 2.8 0" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+            <span class="notif-badge num" id="notif-badge" aria-hidden="true">3</span>
+          </button>
+          <div class="popover" id="notif-panel" hidden aria-label="通知">
+            <div class="popover-head">
+              <p class="popover-title" id="notif-title">通知</p>
+              <button type="button" class="text-btn" id="mark-read">全部標示為已讀</button>
+            </div>
+            <ul class="notif-list" id="notif-list">
+              <li class="unread"><a href="#orders">
+                <span class="notif-dot" aria-hidden="true"></span>
+                <span class="notif-text">6 筆訂單已超過 24 小時尚未出貨，請儘速安排。
+                  <time class="notif-time" datetime="2026-07-04T14:22+08:00">10 分鐘前</time></span></a></li>
+              <li class="unread"><a href="#products">
+                <span class="notif-dot" aria-hidden="true"></span>
+                <span class="notif-text">「316 不鏽鋼保溫瓶 750ml」庫存低於安全水位（剩 12 件）。
+                  <time class="notif-time" datetime="2026-07-04T13:30+08:00">1 小時前</time></span></a></li>
+              <li class="unread"><a href="#reports">
+                <span class="notif-dot" aria-hidden="true"></span>
+                <span class="notif-text">6 月營收月報已產生，可至報表中心下載。
+                  <time class="notif-time" datetime="2026-07-04T09:00+08:00">今天 09:00</time></span></a></li>
+            </ul>
+          </div>
+        </div>
+        <div class="user-chip">
+          <span class="avatar" aria-hidden="true">佩</span>
+          <span class="user-name">徐佩君</span>
+        </div>
+      </div>
+    </header>
+
+    <!-- ============ 主要內容 ============ -->
+    <main id="main">
+      <div class="page-head" id="overview">
+        <h1>營運總覽</h1>
+        <p class="page-meta">資料更新於 <time id="updated-at" datetime="2026-07-04T14:32+08:00">2026年7月4日 下午 2:32</time>・每 10 分鐘自動更新</p>
+      </div>
+
+      <!-- KPI -->
+      <section aria-labelledby="kpi-title">
+        <h2 class="sr-only" id="kpi-title">關鍵指標</h2>
+        <div class="kpi-grid">
+          <article class="card kpi">
+            <h3>今日營收</h3>
+            <p class="kpi-value num">NT$486,231</p>
+            <p class="kpi-delta">
+              <span class="chip up"><svg width="8" height="8" viewBox="0 0 8 8" aria-hidden="true"><path d="M4 1l3.2 5H0.8L4 1Z" fill="currentColor"/></svg>+8.8%</span>
+              <span class="kpi-compare num">較昨日 NT$447,090</span>
+            </p>
+            <svg class="spark" viewBox="0 0 96 28" fill="none" aria-hidden="true"><polyline points="2.0,6.7 17.3,24.0 32.7,21.3 48.0,18.2 63.3,16.0 78.7,10.6 94.0,4.0" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </article>
+
+          <article class="card kpi">
+            <h3>今日訂單</h3>
+            <p class="kpi-value num">412 筆</p>
+            <p class="kpi-delta">
+              <span class="chip up"><svg width="8" height="8" viewBox="0 0 8 8" aria-hidden="true"><path d="M4 1l3.2 5H0.8L4 1Z" fill="currentColor"/></svg>+11.1%</span>
+              <span class="kpi-compare num">較昨日 371 筆</span>
+            </p>
+            <svg class="spark" viewBox="0 0 96 28" fill="none" aria-hidden="true"><polyline points="2.0,6.2 17.3,24.0 32.7,21.8 48.0,19.3 63.3,18.4 78.7,13.1 94.0,4.0" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </article>
+
+          <article class="card kpi">
+            <h3>平均客單價</h3>
+            <p class="kpi-value num">NT$1,180</p>
+            <p class="kpi-delta">
+              <span class="chip down"><svg width="8" height="8" viewBox="0 0 8 8" aria-hidden="true"><path d="M4 7L0.8 2h6.4L4 7Z" fill="currentColor"/></svg>−2.0%</span>
+              <span class="kpi-compare num">較昨日 NT$1,204</span>
+            </p>
+            <svg class="spark" viewBox="0 0 96 28" fill="none" aria-hidden="true"><polyline points="2.0,15.6 17.3,24.0 32.7,19.8 48.0,14.6 63.3,6.6 78.7,4.0 94.0,11.7" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </article>
+
+          <article class="card kpi">
+            <h3>轉換率</h3>
+            <p class="kpi-value num">3.42%</p>
+            <p class="kpi-delta">
+              <span class="chip up"><svg width="8" height="8" viewBox="0 0 8 8" aria-hidden="true"><path d="M4 1l3.2 5H0.8L4 1Z" fill="currentColor"/></svg>+8.9%</span>
+              <span class="kpi-compare num">較昨日 3.14%</span>
+            </p>
+            <svg class="spark" viewBox="0 0 96 28" fill="none" aria-hidden="true"><polyline points="2.0,14.4 17.3,24.0 32.7,21.4 48.0,18.8 63.3,17.5 78.7,16.2 94.0,4.0" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </article>
+        </div>
+      </section>
+
+      <!-- 圖表 -->
+      <div class="charts">
+        <section class="card chart-card" id="revenue" aria-labelledby="rev-title">
+          <div class="card-head">
+            <h2 id="rev-title">營收趨勢</h2>
+            <div class="seg spacer" role="group" aria-label="切換統計期間">
+              <button type="button" data-period="7d" aria-pressed="false">近 7 日</button>
+              <button type="button" data-period="30d" aria-pressed="true">近 30 日</button>
+              <button type="button" data-period="90d" aria-pressed="false">近 90 日</button>
+            </div>
+          </div>
+          <p class="chart-summary num" id="rev-summary">總計 NT$12,301,740・日均 NT$410,058</p>
+          <div class="chart-body">
+            <svg class="rev-chart" id="rev-chart" viewBox="0 0 720 240" role="img"
+                 aria-label="近 30 日營收折線圖：整體向上，週末出現高峰；最低為 6 月 15 日 NT$33.6 萬，最高為 6 月 27 日 NT$49.2 萬，7 月 4 日為 NT$48.6 萬。">
+              <g aria-hidden="true">
+                <line x1="48" y1="46.7" x2="708" y2="46.7" stroke="var(--grid-line)" stroke-width="1"/>
+                <line x1="48" y1="108" x2="708" y2="108" stroke="var(--grid-line)" stroke-width="1"/>
+                <line x1="48" y1="169.3" x2="708" y2="169.3" stroke="var(--grid-line)" stroke-width="1"/>
+                <line x1="48" y1="200" x2="708" y2="200" stroke="var(--border-strong)" stroke-width="1"/>
+                <text class="tick y-tick" x="40" y="50.7" text-anchor="end">50萬</text>
+                <text class="tick y-tick" x="40" y="112" text-anchor="end">40萬</text>
+                <text class="tick y-tick" x="40" y="173.3" text-anchor="end">30萬</text>
+                <path id="rev-area" d="M48,200 L48.0,109.2 L70.8,76.1 L93.5,89.0 L116.3,143.6 L139.0,138.1 L161.8,129.5 L184.6,125.2 L207.3,104.9 L230.1,66.3 L252.8,80.4 L275.6,147.3 L298.3,139.9 L321.1,131.3 L343.9,125.8 L366.6,100.6 L389.4,62.6 L412.1,72.4 L434.9,137.4 L457.7,131.9 L480.4,121.5 L503.2,113.5 L525.9,90.8 L548.7,51.6 L571.4,65.1 L594.2,127.6 L617.0,117.8 L639.7,106.8 L662.5,98.8 L685.2,79.2 L708.0,55.1 L708,200 Z" fill="var(--chart-fill)"/>
+                <polyline id="rev-line" points="48.0,109.2 70.8,76.1 93.5,89.0 116.3,143.6 139.0,138.1 161.8,129.5 184.6,125.2 207.3,104.9 230.1,66.3 252.8,80.4 275.6,147.3 298.3,139.9 321.1,131.3 343.9,125.8 366.6,100.6 389.4,62.6 412.1,72.4 434.9,137.4 457.7,131.9 480.4,121.5 503.2,113.5 525.9,90.8 548.7,51.6 571.4,65.1 594.2,127.6 617.0,117.8 639.7,106.8 662.5,98.8 685.2,79.2 708.0,55.1" fill="none" stroke="var(--chart-line)" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"/>
+                <circle id="rev-dot" cx="708" cy="55.1" r="3.5" fill="var(--chart-line)" stroke="var(--surface)" stroke-width="1.5"/>
+                <text class="note" id="rev-note" x="708" y="41.1" text-anchor="end">7/4・NT$486,231</text>
+                <g id="rev-xticks">
+                  <text class="tick" x="48" y="224" text-anchor="start">6/5</text>
+                  <text class="tick" x="161.8" y="224" text-anchor="middle">6/10</text>
+                  <text class="tick" x="275.6" y="224" text-anchor="middle">6/15</text>
+                  <text class="tick" x="389.4" y="224" text-anchor="middle">6/20</text>
+                  <text class="tick" x="503.2" y="224" text-anchor="middle">6/25</text>
+                  <text class="tick" x="617" y="224" text-anchor="middle">6/30</text>
+                  <text class="tick" x="708" y="224" text-anchor="end">7/4</text>
+                </g>
+              </g>
+            </svg>
+          </div>
+        </section>
+
+        <section class="card chart-card" id="category" aria-labelledby="cat-title">
+          <div class="card-head">
+            <h2 id="cat-title">分類銷售占比</h2>
+            <span class="chart-summary spacer" style="padding:0">近 30 日</span>
+          </div>
+          <ol class="cat-list">
+            <li>
+              <span class="cat-name">服飾與配件</span>
+              <span class="cat-track" aria-hidden="true"><span class="cat-fill" style="width:100%"></span></span>
+              <span class="cat-amt">NT$4,182,300</span>
+              <span class="cat-pct">34%</span>
+            </li>
+            <li>
+              <span class="cat-name">美妝保養</span>
+              <span class="cat-track" aria-hidden="true"><span class="cat-fill" style="width:76.5%;opacity:.85"></span></span>
+              <span class="cat-amt">NT$3,198,540</span>
+              <span class="cat-pct">26%</span>
+            </li>
+            <li>
+              <span class="cat-name">3C 與周邊</span>
+              <span class="cat-track" aria-hidden="true"><span class="cat-fill" style="width:52.9%;opacity:.7"></span></span>
+              <span class="cat-amt">NT$2,214,680</span>
+              <span class="cat-pct">18%</span>
+            </li>
+            <li>
+              <span class="cat-name">居家生活</span>
+              <span class="cat-track" aria-hidden="true"><span class="cat-fill" style="width:41.2%;opacity:.55"></span></span>
+              <span class="cat-amt">NT$1,722,140</span>
+              <span class="cat-pct">14%</span>
+            </li>
+            <li>
+              <span class="cat-name">食品飲料</span>
+              <span class="cat-track" aria-hidden="true"><span class="cat-fill" style="width:23.5%;opacity:.4"></span></span>
+              <span class="cat-amt">NT$984,080</span>
+              <span class="cat-pct">8%</span>
+            </li>
+          </ol>
+          <p class="cat-foot">近 30 日商品營收總計 <strong class="num">NT$12,301,740</strong></p>
+        </section>
+      </div>
+
+      <!-- 訂單 -->
+      <section class="card orders-card" id="orders" aria-labelledby="orders-title">
+        <div class="card-head">
+          <h2 id="orders-title">最新訂單</h2>
+          <a class="spacer card-link" href="#orders">查看全部訂單 →</a>
+        </div>
+
+        <div class="orders-toolbar">
+          <form class="search-field" role="search" aria-label="搜尋訂單">
+            <label class="sr-only" for="order-q">搜尋訂單編號、客戶或商品</label>
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true"><circle cx="7" cy="7" r="4.5" stroke="currentColor" stroke-width="1.5"/><path d="M10.5 10.5L14 14" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+            <input type="search" id="order-q" name="q" placeholder="搜尋訂單編號、客戶或商品…"
+                   autocomplete="off" spellcheck="false">
+            <kbd aria-hidden="true">⌘&nbsp;K</kbd>
+          </form>
+          <div class="field-row">
+            <label for="status-filter">狀態</label>
+            <select id="status-filter" name="status">
+              <option value="all" selected>全部狀態</option>
+              <option value="processing">處理中</option>
+              <option value="unpaid">待付款</option>
+              <option value="shipped">已出貨</option>
+              <option value="done">已完成</option>
+              <option value="refund">退款處理</option>
+            </select>
+          </div>
+          <button type="button" class="btn" id="export-csv">
+            <svg width="15" height="15" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M8 2v8M4.5 6.5L8 10l3.5-3.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/><path d="M2.5 13.5h11" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+            匯出 CSV
+          </button>
+        </div>
+
+        <div class="table-wrap" role="region" aria-labelledby="orders-title" tabindex="0">
+          <table>
+            <caption class="sr-only">最新訂單清單，欄位包含訂單編號、客戶、商品、金額、付款方式、狀態與成立時間。</caption>
+            <thead>
+              <tr>
+                <th scope="col">訂單編號</th>
+                <th scope="col">客戶</th>
+                <th scope="col">商品</th>
+                <th scope="col" class="col-amt">金額</th>
+                <th scope="col">付款方式</th>
+                <th scope="col">狀態</th>
+                <th scope="col">成立時間</th>
+              </tr>
+            </thead>
+            <tbody id="orders-body">
+              <tr data-status="processing">
+                <th scope="row"><a class="order-id" href="#orders" translate="no">PL-20260704-0412</a></th>
+                <td>陳冠廷</td>
+                <td class="cell-product">石墨烯速乾機能外套（男款 XL）</td>
+                <td class="col-amt">NT$2,380</td>
+                <td class="cell-pay">信用卡</td>
+                <td><span class="status processing">處理中</span></td>
+                <td class="cell-time"><time datetime="2026-07-04T14:27+08:00">今天 14:27</time></td>
+              </tr>
+              <tr data-status="unpaid">
+                <th scope="row"><a class="order-id" href="#orders" translate="no">PL-20260704-0411</a></th>
+                <td>林怡君</td>
+                <td class="cell-product">玻尿酸保濕精華液 30ml（2 入組）</td>
+                <td class="col-amt">NT$1,760</td>
+                <td class="cell-pay">ATM 轉帳</td>
+                <td><span class="status unpaid">待付款</span></td>
+                <td class="cell-time"><time datetime="2026-07-04T14:21+08:00">今天 14:21</time></td>
+              </tr>
+              <tr data-status="processing">
+                <th scope="row"><a class="order-id" href="#orders" translate="no">PL-20260704-0409</a></th>
+                <td>張家豪</td>
+                <td class="cell-product">真無線藍牙降噪耳機 Pro</td>
+                <td class="col-amt">NT$3,290</td>
+                <td class="cell-pay" translate="no">LINE Pay</td>
+                <td><span class="status processing">處理中</span></td>
+                <td class="cell-time"><time datetime="2026-07-04T14:08+08:00">今天 14:08</time></td>
+              </tr>
+              <tr data-status="shipped">
+                <th scope="row"><a class="order-id" href="#orders" translate="no">PL-20260704-0405</a></th>
+                <td>王雅婷</td>
+                <td class="cell-product">大甲芋頭酥禮盒（12 入）</td>
+                <td class="col-amt">NT$680</td>
+                <td class="cell-pay">信用卡</td>
+                <td><span class="status shipped">已出貨</span></td>
+                <td class="cell-time"><time datetime="2026-07-04T13:46+08:00">今天 13:46</time></td>
+              </tr>
+              <tr data-status="shipped">
+                <th scope="row"><a class="order-id" href="#orders" translate="no">PL-20260704-0398</a></th>
+                <td>李承翰</td>
+                <td class="cell-product">316 不鏽鋼保溫瓶 750ml（霧黑）</td>
+                <td class="col-amt">NT$1,090</td>
+                <td class="cell-pay">街口支付</td>
+                <td><span class="status shipped">已出貨</span></td>
+                <td class="cell-time"><time datetime="2026-07-04T12:59+08:00">今天 12:59</time></td>
+              </tr>
+              <tr data-status="refund">
+                <th scope="row"><a class="order-id" href="#orders" translate="no">PL-20260704-0387</a></th>
+                <td>黃詩涵</td>
+                <td class="cell-product">阿里山高山烏龍茶禮盒（150g×2）</td>
+                <td class="col-amt">NT$1,480</td>
+                <td class="cell-pay">信用卡</td>
+                <td><span class="status refund">退款處理</span></td>
+                <td class="cell-time"><time datetime="2026-07-04T11:32+08:00">今天 11:32</time></td>
+              </tr>
+              <tr data-status="done">
+                <th scope="row"><a class="order-id" href="#orders" translate="no">PL-20260703-0361</a></th>
+                <td>吳孟哲</td>
+                <td class="cell-product">陶瓷不沾平底鍋 28cm</td>
+                <td class="col-amt">NT$1,890</td>
+                <td class="cell-pay">貨到付款</td>
+                <td><span class="status done">已完成</span></td>
+                <td class="cell-time"><time datetime="2026-07-03T21:15+08:00">昨天 21:15</time></td>
+              </tr>
+              <tr data-status="done">
+                <th scope="row"><a class="order-id" href="#orders" translate="no">PL-20260703-0352</a></th>
+                <td>蔡佩珊</td>
+                <td class="cell-product">兒童防走失後背包（恐龍款）</td>
+                <td class="col-amt">NT$790</td>
+                <td class="cell-pay" translate="no">LINE Pay</td>
+                <td><span class="status done">已完成</span></td>
+                <td class="cell-time"><time datetime="2026-07-03T19:48+08:00">昨天 19:48</time></td>
+              </tr>
+              <tr class="empty-row" id="empty-row" hidden>
+                <td colspan="7">
+                  沒有符合條件的訂單。
+                  <button type="button" class="btn" id="clear-filters">清除篩選</button>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="table-foot">
+          <p class="count-note" id="count-note">顯示第 1–8 筆，共 10,428 筆（近 30 日）</p>
+          <nav class="pager" aria-label="訂單頁碼">
+            <ul>
+              <li><span class="page-off" aria-disabled="true">上一頁</span></li>
+              <li><a href="?page=1#orders" aria-current="page">1</a></li>
+              <li><a href="?page=2#orders">2</a></li>
+              <li><a href="?page=3#orders">3</a></li>
+              <li><span class="page-gap" aria-hidden="true">…</span></li>
+              <li><a href="?page=1304#orders">1304</a></li>
+              <li><a href="?page=2#orders">下一頁</a></li>
+            </ul>
+          </nav>
+        </div>
+      </section>
+
+      <p class="page-foot"><span translate="no">Pulse</span> 脈搏 v3.2.1・資料來源：訂單系統（每 10 分鐘同步）・時區 <span translate="no">Asia/Taipei</span></p>
+    </main>
+  </div>
+</div>
+
+<p class="sr-only" aria-live="polite" id="live"></p>
+
+<script>
+(function () {
+  "use strict";
+  var $ = function (s, c) { return (c || document).querySelector(s); };
+  var $$ = function (s, c) { return Array.prototype.slice.call((c || document).querySelectorAll(s)); };
+  var live = $("#live");
+  function announce(msg) { live.textContent = ""; window.setTimeout(function () { live.textContent = msg; }, 30); }
+  function syncURL(params) {
+    try {
+      var qs = params.toString();
+      history.replaceState(null, "", location.pathname + (qs ? "?" + qs : "") + location.hash);
+    } catch (e) { /* file:// 等環境不支援時略過 */ }
+  }
+
+  /* ---- 資料更新時間（Intl，固定於資料時間戳） ---- */
+  try {
+    var t = new Date("2026-07-04T14:32:00+08:00");
+    $("#updated-at").textContent = new Intl.DateTimeFormat("zh-TW", {
+      dateStyle: "long", timeStyle: "short", timeZone: "Asia/Taipei"
+    }).format(t);
+  } catch (e) { /* 保留靜態文字 */ }
+
+  /* ---- 行動版側邊欄 ---- */
+  var sidebar = $("#sidebar"), menuBtn = $("#menu-btn"), sbClose = $("#sb-close"), backdrop = $("#backdrop");
+  function openSidebar() {
+    sidebar.classList.add("open");
+    backdrop.hidden = false;
+    menuBtn.setAttribute("aria-expanded", "true");
+    var first = $("a", sidebar); if (first) first.focus();
+  }
+  function closeSidebar(refocus) {
+    sidebar.classList.remove("open");
+    backdrop.hidden = true;
+    menuBtn.setAttribute("aria-expanded", "false");
+    if (refocus) menuBtn.focus();
+  }
+  menuBtn.addEventListener("click", openSidebar);
+  sbClose.addEventListener("click", function () { closeSidebar(true); });
+  backdrop.addEventListener("click", function () { closeSidebar(true); });
+  $$("a", sidebar).forEach(function (a) {
+    a.addEventListener("click", function () { if (sidebar.classList.contains("open")) closeSidebar(false); });
+  });
+
+  /* ---- 通知快顯 ---- */
+  var notifBtn = $("#notif-btn"), notifPanel = $("#notif-panel"), markRead = $("#mark-read"), badge = $("#notif-badge");
+  function setNotif(open) {
+    notifPanel.hidden = !open;
+    notifBtn.setAttribute("aria-expanded", String(open));
+  }
+  notifBtn.addEventListener("click", function () { setNotif(notifPanel.hidden); });
+  document.addEventListener("click", function (e) {
+    if (!notifPanel.hidden && !notifPanel.contains(e.target) && !notifBtn.contains(e.target)) setNotif(false);
+  });
+  markRead.addEventListener("click", function () {
+    $$("#notif-list .unread").forEach(function (li) { li.classList.remove("unread"); });
+    badge.hidden = true;
+    notifBtn.setAttribute("aria-label", "通知，0 則未讀");
+    markRead.disabled = true;
+    announce("已將 3 則通知標示為已讀");
+  });
+
+  document.addEventListener("keydown", function (e) {
+    if (e.key === "Escape") {
+      if (!notifPanel.hidden) { setNotif(false); notifBtn.focus(); }
+      else if (sidebar.classList.contains("open")) closeSidebar(true);
+    }
+    if ((e.metaKey || e.ctrlKey) && (e.key === "k" || e.key === "K")) {
+      e.preventDefault();
+      $("#order-q").focus();
+    }
+  });
+
+  /* ---- 營收趨勢：期間切換 ---- */
+  var DATA = {
+    "7d": {
+      points: "48.0,65.1 158.0,127.6 268.0,117.8 378.0,106.8 488.0,98.8 598.0,79.2 708.0,55.1",
+      area: "M48,200 L48.0,65.1 L158.0,127.6 L268.0,117.8 L378.0,106.8 L488.0,98.8 L598.0,79.2 L708.0,55.1 L708,200 Z",
+      last: [708, 55.1],
+      ylabels: ["50萬", "40萬", "30萬"],
+      ticks: [[48, "6/28"], [158, "6/29"], [268, "6/30"], [378, "7/1"], [488, "7/2"], [598, "7/3"], [708, "7/4"]],
+      summary: "總計 NT$2,972,200・日均 NT$424,600",
+      note: "7/4・NT$486,231",
+      aria: "近 7 日營收折線圖：自 6 月 28 日 NT$47.0 萬回落後逐日回升，7 月 4 日達 NT$48.6 萬。",
+      name: "近 7 日"
+    },
+    "30d": {
+      points: "48.0,109.2 70.8,76.1 93.5,89.0 116.3,143.6 139.0,138.1 161.8,129.5 184.6,125.2 207.3,104.9 230.1,66.3 252.8,80.4 275.6,147.3 298.3,139.9 321.1,131.3 343.9,125.8 366.6,100.6 389.4,62.6 412.1,72.4 434.9,137.4 457.7,131.9 480.4,121.5 503.2,113.5 525.9,90.8 548.7,51.6 571.4,65.1 594.2,127.6 617.0,117.8 639.7,106.8 662.5,98.8 685.2,79.2 708.0,55.1",
+      area: "M48,200 L48.0,109.2 L70.8,76.1 L93.5,89.0 L116.3,143.6 L139.0,138.1 L161.8,129.5 L184.6,125.2 L207.3,104.9 L230.1,66.3 L252.8,80.4 L275.6,147.3 L298.3,139.9 L321.1,131.3 L343.9,125.8 L366.6,100.6 L389.4,62.6 L412.1,72.4 L434.9,137.4 L457.7,131.9 L480.4,121.5 L503.2,113.5 L525.9,90.8 L548.7,51.6 L571.4,65.1 L594.2,127.6 L617.0,117.8 L639.7,106.8 L662.5,98.8 L685.2,79.2 L708.0,55.1 L708,200 Z",
+      last: [708, 55.1],
+      ylabels: ["50萬", "40萬", "30萬"],
+      ticks: [[48, "6/5"], [161.8, "6/10"], [275.6, "6/15"], [389.4, "6/20"], [503.2, "6/25"], [617, "6/30"], [708, "7/4"]],
+      summary: "總計 NT$12,301,740・日均 NT$410,058",
+      note: "7/4・NT$486,231",
+      aria: "近 30 日營收折線圖：整體向上，週末出現高峰；最低為 6 月 15 日 NT$33.6 萬，最高為 6 月 27 日 NT$49.2 萬，7 月 4 日為 NT$48.6 萬。",
+      name: "近 30 日"
+    },
+    "90d": {
+      points: "48.0,152.5 103.0,160.1 158.0,135.6 213.0,141.7 268.0,120.3 323.0,127.9 378.0,108.0 433.0,115.7 488.0,95.7 543.0,103.4 598.0,83.5 653.0,72.7 708.0,51.3",
+      area: "M48,200 L48.0,152.5 L103.0,160.1 L158.0,135.6 L213.0,141.7 L268.0,120.3 L323.0,127.9 L378.0,108.0 L433.0,115.7 L488.0,95.7 L543.0,103.4 L598.0,83.5 L653.0,72.7 L708.0,51.3 L708,200 Z",
+      last: [708, 51.3],
+      ylabels: ["300萬", "260萬", "220萬"],
+      ticks: [[48, "4/11"], [158, "4/25"], [268, "5/9"], [378, "5/23"], [488, "6/6"], [598, "6/20"], [708, "7/4"]],
+      summary: "總計 NT$33,380,000・週均 NT$2,567,700",
+      note: "本週・NT$2,972,200",
+      aria: "近 90 日每週營收折線圖：由 4 月中的每週約 NT$230 萬穩定成長至本週 NT$297 萬。",
+      name: "近 90 日"
+    }
+  };
+  var segBtns = $$(".seg button");
+  var chart = $("#rev-chart");
+  function setPeriod(key, announceIt) {
+    var d = DATA[key]; if (!d) return;
+    $("#rev-line").setAttribute("points", d.points);
+    $("#rev-area").setAttribute("d", d.area);
+    var dot = $("#rev-dot");
+    dot.setAttribute("cx", d.last[0]); dot.setAttribute("cy", d.last[1]);
+    var note = $("#rev-note");
+    note.textContent = d.note;
+    note.setAttribute("y", Math.max(d.last[1] - 14, 12));
+    $$(".y-tick", chart).forEach(function (el, i) { el.textContent = d.ylabels[i]; });
+    $$("#rev-xticks .tick").forEach(function (el, i) {
+      el.setAttribute("x", d.ticks[i][0]);
+      el.textContent = d.ticks[i][1];
+      el.setAttribute("text-anchor", i === 0 ? "start" : (i === d.ticks.length - 1 ? "end" : "middle"));
+    });
+    $("#rev-summary").textContent = d.summary;
+    chart.setAttribute("aria-label", d.aria);
+    segBtns.forEach(function (b) { b.setAttribute("aria-pressed", String(b.dataset.period === key)); });
+    var params = new URLSearchParams(location.search);
+    if (key === "30d") params.delete("period"); else params.set("period", key);
+    syncURL(params);
+    if (announceIt) announce("已切換為" + d.name + "營收資料");
+  }
+  segBtns.forEach(function (b) {
+    b.addEventListener("click", function () { setPeriod(b.dataset.period, true); });
+  });
+
+  /* ---- 訂單篩選（搜尋 + 狀態） ---- */
+  var qInput = $("#order-q"), statusSel = $("#status-filter");
+  var rows = $$("#orders-body tr[data-status]");
+  rows.forEach(function (r) { r.dataset.search = r.textContent.toLowerCase().replace(/\s+/g, " "); });
+  var emptyRow = $("#empty-row"), countNote = $("#count-note");
+  var statusName = { all: "全部狀態", processing: "處理中", unpaid: "待付款", shipped: "已出貨", done: "已完成", refund: "退款處理" };
+
+  function applyFilters(announceIt) {
+    var q = qInput.value.trim().toLowerCase();
+    var st = statusSel.value;
+    var shown = 0;
+    rows.forEach(function (r) {
+      var ok = (st === "all" || r.dataset.status === st) && (!q || r.dataset.search.indexOf(q) !== -1);
+      r.hidden = !ok;
+      if (ok) shown++;
+    });
+    emptyRow.hidden = shown > 0;
+    if (!q && st === "all") {
+      countNote.textContent = "顯示第 1–8 筆，共 10,428 筆（近 30 日）";
+    } else {
+      countNote.textContent = "符合條件 " + shown + " 筆（本頁 8 筆中）";
+    }
+    var params = new URLSearchParams(location.search);
+    if (q) params.set("q", qInput.value.trim()); else params.delete("q");
+    if (st !== "all") params.set("status", st); else params.delete("status");
+    syncURL(params);
+    if (announceIt) announce("篩選結果：" + shown + " 筆訂單");
+  }
+  qInput.form.addEventListener("submit", function (e) { e.preventDefault(); applyFilters(true); });
+  var debounceTimer = null;
+  qInput.addEventListener("input", function () {
+    window.clearTimeout(debounceTimer);
+    debounceTimer = window.setTimeout(function () { applyFilters(true); }, 300);
+  });
+  statusSel.addEventListener("change", function () { applyFilters(true); });
+  $("#clear-filters").addEventListener("click", function () {
+    qInput.value = ""; statusSel.value = "all";
+    applyFilters(false);
+    announce("已清除篩選，顯示全部 8 筆訂單");
+    qInput.focus();
+  });
+
+  /* ---- 匯出 CSV ---- */
+  $("#export-csv").addEventListener("click", function () {
+    var header = ["訂單編號", "客戶", "商品", "金額", "付款方式", "狀態", "成立時間"];
+    var lines = [header.join(",")];
+    rows.forEach(function (r) {
+      if (r.hidden) return;
+      var cells = $$("th, td", r).map(function (c) {
+        return '"' + c.textContent.trim().replace(/"/g, '""') + '"';
+      });
+      lines.push(cells.join(","));
+    });
+    var blob = new Blob(["\uFEFF" + lines.join("\r\n")], { type: "text/csv;charset=utf-8" });
+    var url = URL.createObjectURL(blob);
+    var a = document.createElement("a");
+    a.href = url;
+    a.download = "pulse-orders-2026-07-04.csv";
+    document.body.appendChild(a);
+    a.click();
+    a.remove();
+    URL.revokeObjectURL(url);
+    announce("已下載訂單 CSV 檔案");
+  });
+
+  /* ---- 從網址還原狀態（深層連結） ---- */
+  var params = new URLSearchParams(location.search);
+  var p = params.get("period");
+  if (p && DATA[p]) setPeriod(p, false);
+  var q0 = params.get("q"), s0 = params.get("status");
+  if (q0) qInput.value = q0;
+  if (s0 && statusName[s0]) statusSel.value = s0;
+  if (q0 || (s0 && s0 !== "all")) applyFilters(false);
+})();
+</script>
+</body>
+</html>

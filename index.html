@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="zh-Hant-TW">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Design Skill 對決 — Pulse 脈搏儀表板 × 7 變體</title>
+<style>
+  :root {
+    --bg: #0f1115;
+    --surface: #171a21;
+    --border: #262b36;
+    --text: #e8eaf0;
+    --muted: #8b93a7;
+    --accent: #e05e4b;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: "PingFang TC", "Noto Sans TC", -apple-system, "Segoe UI", sans-serif;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+  }
+  header {
+    padding: 20px 28px 16px;
+    border-bottom: 1px solid var(--border);
+  }
+  header h1 { font-size: 20px; font-weight: 700; letter-spacing: 0.5px; }
+  header h1 span { color: var(--accent); }
+  header p.brief {
+    margin-top: 8px;
+    font-size: 13px;
+    color: var(--muted);
+    line-height: 1.6;
+    max-width: 900px;
+  }
+  header p.brief strong { color: var(--text); font-weight: 600; }
+  nav.tabs {
+    display: flex;
+    gap: 6px;
+    padding: 12px 28px;
+    flex-wrap: wrap;
+    border-bottom: 1px solid var(--border);
+    background: var(--surface);
+    position: sticky;
+    top: 0;
+    z-index: 10;
+  }
+  nav.tabs button {
+    appearance: none;
+    border: 1px solid var(--border);
+    background: transparent;
+    color: var(--muted);
+    font: inherit;
+    font-size: 13px;
+    padding: 7px 14px;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all .15s ease;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  nav.tabs button .tag {
+    font-size: 10px;
+    padding: 2px 6px;
+    border-radius: 4px;
+    background: var(--border);
+    color: var(--muted);
+  }
+  nav.tabs button:hover { color: var(--text); border-color: #3a4152; }
+  nav.tabs button.active {
+    background: var(--accent);
+    border-color: var(--accent);
+    color: #fff;
+  }
+  nav.tabs button.active .tag { background: rgba(255,255,255,.22); color: #fff; }
+  nav.tabs a.open-new {
+    margin-left: auto;
+    font-size: 13px;
+    color: var(--muted);
+    text-decoration: none;
+    padding: 7px 14px;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    transition: all .15s ease;
+  }
+  nav.tabs a.open-new:hover { color: var(--text); border-color: #3a4152; }
+  .desc-bar {
+    padding: 10px 28px;
+    font-size: 12.5px;
+    color: var(--muted);
+    background: var(--bg);
+    border-bottom: 1px solid var(--border);
+    line-height: 1.5;
+  }
+  .desc-bar b { color: var(--text); }
+  main {
+    flex: 1;
+    display: flex;
+    background: #fff;
+  }
+  main iframe {
+    flex: 1;
+    width: 100%;
+    border: 0;
+    min-height: calc(100vh - 190px);
+  }
+  @media (max-width: 720px) {
+    nav.tabs a.open-new { margin-left: 0; }
+  }
+</style>
+</head>
+<body>
+<header>
+  <h1>Design Skill 對決 <span>×7</span> — 同一份提示詞，七種設計 DNA</h1>
+  <p class="brief"><strong>任務簡報：</strong>為電商營運分析平台「Pulse 脈搏」設計儀表板：側邊欄、頂欄、4 個 KPI 卡、純 CSS/SVG 圖表、訂單表格。<strong>考察點：</strong>資訊密度、資料排版、功能性克制。 限制：單一 HTML、僅 Google Fonts、禁外部圖片與圖表函式庫。</p>
+</header>
+<nav class="tabs" id="tabs"></nav>
+<div class="desc-bar" id="desc"></div>
+<main><iframe id="frame" title="變體預覽"></iframe></main>
+<script>
+const variants = [
+  { id: "baseline",              name: "Baseline",              tag: "無 Skill 對照組",
+    desc: "<b>對照組</b>：不裝任何設計 skill，模型的預設審美。其他五個變體的差異都以此為基準。" },
+  { id: "frontend-design",       name: "frontend-design",       tag: "Anthropic",
+    desc: "<b>Anthropic 官方萬金油</b>：鼓勵大膽、有辨識度的視覺決策。用的人太多，推文作者認為它「即將成為新的 AI 味」。" },
+  { id: "ui-ux-pro-max",         name: "ui-ux-pro-max",         tag: "規則庫型",
+    desc: "<b>規則庫型</b>：內建 50+ 風格、161 組配色、57 組字體的檢索系統。推文作者評「非常一般，自帶太多模板反而限制模型發揮」。" },
+  { id: "emil-design-eng",       name: "emil-design-eng",       tag: "動效最佳",
+    desc: "<b>Emil Kowalski 的設計工程哲學</b>：UI 打磨、動效決策、看不見的細節。推文評測中「動效方面最好」。" },
+  { id: "web-design-guidelines", name: "web-design-guidelines", tag: "Vercel",
+    desc: "<b>Vercel 官方規範</b>：Web Interface Guidelines，主打語意化、無障礙、鍵盤操作。推文評測中「網頁規範＋無障礙最好」。" },
+  { id: "taste-skill",           name: "taste-skill",           tag: "AI 味最小",
+    desc: "<b>Anti-Slop 反模板</b>：design-taste-frontend，鎖定排版紀律、拒絕生成式陳腔濫調。推文評測中「AI 味最小、文案簡潔」。" },
+  { id: "impeccable",            name: "impeccable",            tag: "設計語彙",
+    desc: "<b>設計語彙系統</b>：impeccable.style（pbakaus），給 agent「設計師的詞彙」——層級、對比、克制。評論區點名補測的熱門 skill。" },
+];
+const tabs = document.getElementById("tabs");
+const frame = document.getElementById("frame");
+const desc = document.getElementById("desc");
+const openNew = document.createElement("a");
+openNew.className = "open-new";
+openNew.target = "_blank";
+openNew.textContent = "在新分頁開啟 ↗";
+
+function select(v, btn) {
+  frame.src = "pages/" + v.id + ".html";
+  desc.innerHTML = v.desc;
+  openNew.href = "pages/" + v.id + ".html";
+  document.querySelectorAll("nav.tabs button").forEach(b => b.classList.remove("active"));
+  btn.classList.add("active");
+  history.replaceState(null, "", "#" + v.id);
+}
+
+variants.forEach((v, i) => {
+  const btn = document.createElement("button");
+  btn.innerHTML = `${v.name} <span class="tag">${v.tag}</span>`;
+  btn.addEventListener("click", () => select(v, btn));
+  tabs.appendChild(btn);
+  v._btn = btn;
+});
+tabs.appendChild(openNew);
+
+const initial = variants.find(v => "#" + v.id === location.hash) || variants[0];
+select(initial, initial._btn);
+</script>
+</body>
+</html>

@@ -1,0 +1,605 @@
+<!DOCTYPE html>
+<html lang="zh-Hant-TW">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="color-scheme" content="light dark">
+<title>Pulse 脈搏 · 營運總覽</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=Noto+Sans+TC:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+/* ============================================================
+   Pulse 脈搏 · 電商營運儀表板
+   設計代幣：單一強調色（低飽和藍），冷灰中性系，
+   圓角制度：面板 12px / 控制項 8px / 標籤與內嵌元素 6px / 頭像圓形。
+   數字一律使用 IBM Plex Mono（等寬），介面文字 Noto Sans TC。
+   ============================================================ */
+:root{
+  --bg:#f2f3f5;
+  --surface:#fbfbfc;
+  --surface-2:#f4f4f6;
+  --border:#e4e6ea;
+  --border-strong:#d3d6dc;
+  --text-1:#1d2026;
+  --text-2:#575c66;
+  --text-3:#82878f;
+  --accent:#2f5fc0;
+  --accent-ink:#274f9f;
+  --pos:#1e7a44;
+  --neg:#b3362b;
+  --warn:#8f6410;
+  --shadow:0 1px 2px rgba(20,23,30,.04);
+  --r-panel:12px;
+  --r-ctl:8px;
+  --r-tag:6px;
+}
+@media (prefers-color-scheme: dark){
+  :root{
+    --bg:#131418;
+    --surface:#1a1c21;
+    --surface-2:#22242b;
+    --border:#2a2d35;
+    --border-strong:#3a3e48;
+    --text-1:#e8e9ec;
+    --text-2:#a3a8b2;
+    --text-3:#767b85;
+    --accent:#7d9ce8;
+    --accent-ink:#93aeee;
+    --pos:#4db47c;
+    --neg:#e0705f;
+    --warn:#d3a13f;
+    --shadow:none;
+  }
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html{color-scheme:light dark}
+body{
+  font-family:'Noto Sans TC','PingFang TC','Microsoft JhengHei',sans-serif;
+  font-size:14px;line-height:1.55;
+  background:var(--bg);color:var(--text-1);
+  -webkit-font-smoothing:antialiased;
+}
+.num{font-family:'IBM Plex Mono',ui-monospace,SFMono-Regular,monospace;font-variant-numeric:tabular-nums}
+a{color:var(--accent-ink);text-decoration:none}
+a:hover{text-decoration:underline}
+button{font:inherit;color:inherit;background:none;border:0;cursor:pointer}
+:focus-visible{outline:2px solid var(--accent);outline-offset:2px;border-radius:4px}
+.sr-only{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+.skip{position:absolute;left:12px;top:-48px;z-index:60;background:var(--surface);border:1px solid var(--border);padding:6px 12px;border-radius:var(--r-ctl)}
+.skip:focus{top:12px}
+
+/* ---------- 版面骨架 ---------- */
+.app{display:grid;grid-template-columns:228px minmax(0,1fr);min-height:100dvh}
+.main{min-width:0}
+
+/* ---------- 側邊欄 ---------- */
+.sidebar{
+  position:sticky;top:0;height:100dvh;overflow-y:auto;
+  background:var(--surface);border-right:1px solid var(--border);
+  display:flex;flex-direction:column;padding:16px 12px 14px;
+}
+.brand{display:flex;align-items:center;gap:9px;padding:2px 8px 14px}
+.brand-mark{
+  width:26px;height:26px;border-radius:var(--r-ctl);flex:none;
+  background:var(--accent);display:grid;place-items:center;
+}
+.brand-mark svg{display:block}
+.brand-name{font-size:15px;font-weight:700;letter-spacing:.01em}
+.brand-name small{font-weight:500;color:var(--text-2);font-size:13px;margin-left:4px}
+.nav{flex:1}
+.nav-group{margin-top:14px}
+.nav-label{font-size:11px;color:var(--text-3);padding:0 10px 4px;letter-spacing:.04em}
+.nav a{
+  display:flex;align-items:center;gap:8px;
+  padding:6px 10px;margin:1px 0;border-radius:var(--r-ctl);
+  font-size:13.5px;color:var(--text-2);text-decoration:none;
+  transition:background .15s ease,color .15s ease;
+}
+.nav a:hover{background:var(--surface-2);color:var(--text-1)}
+.nav a[aria-current="page"]{
+  background:color-mix(in srgb,var(--accent) 10%,transparent);
+  color:var(--accent-ink);font-weight:600;
+}
+.nav-count{
+  margin-left:auto;font-size:11px;padding:1px 6px;border-radius:var(--r-tag);
+  background:var(--surface-2);color:var(--text-2);border:1px solid var(--border);
+}
+.side-foot{border-top:1px solid var(--border);padding-top:12px;margin-top:12px}
+.side-foot .nav a{margin:0 0 8px}
+.user{display:flex;align-items:center;gap:9px;padding:4px 8px 0}
+.avatar{
+  width:28px;height:28px;border-radius:50%;flex:none;
+  background:color-mix(in srgb,var(--accent) 14%,transparent);
+  color:var(--accent-ink);font-size:12.5px;font-weight:600;
+  display:grid;place-items:center;
+}
+.user b{display:block;font-size:13px;font-weight:600;line-height:1.3}
+.user small{font-size:11px;color:var(--text-3)}
+
+/* ---------- 頂欄 ---------- */
+.topbar{
+  position:sticky;top:0;z-index:20;
+  display:flex;align-items:center;gap:14px;
+  background:var(--surface);border-bottom:1px solid var(--border);
+  padding:0 24px;height:60px;
+}
+.menu-toggle{display:none;width:36px;height:36px;border:1px solid var(--border);border-radius:var(--r-ctl);flex-direction:column;align-items:center;justify-content:center;gap:4px}
+.menu-toggle span{display:block;width:15px;height:1.5px;background:var(--text-1);border-radius:1px}
+.page-head h1{font-size:17px;font-weight:700;line-height:1.2}
+.page-head p{font-size:12px;color:var(--text-3);margin-top:1px}
+.topbar-right{margin-left:auto;display:flex;align-items:center;gap:10px}
+.seg{
+  display:flex;background:var(--surface-2);border:1px solid var(--border);
+  border-radius:var(--r-ctl);padding:2px;
+}
+.seg button{
+  padding:4px 11px;font-size:12.5px;color:var(--text-2);border-radius:var(--r-tag);
+  transition:background .15s ease,color .15s ease;white-space:nowrap;
+}
+.seg button:hover{color:var(--text-1)}
+.seg button[aria-pressed="true"]{
+  background:var(--surface);color:var(--text-1);font-weight:600;
+  border:1px solid var(--border);box-shadow:var(--shadow);
+  padding:3px 10px;
+}
+.search{
+  width:210px;padding:6px 11px;font:inherit;font-size:13px;
+  background:var(--surface-2);border:1px solid var(--border);
+  border-radius:var(--r-ctl);color:var(--text-1);
+}
+.search::placeholder{color:var(--text-2)}
+.search:focus{outline:2px solid var(--accent);outline-offset:0;border-color:transparent}
+.btn{
+  padding:6px 13px;font-size:13px;font-weight:500;white-space:nowrap;
+  border:1px solid var(--border-strong);border-radius:var(--r-ctl);
+  background:var(--surface);color:var(--text-1);
+  transition:background .15s ease;
+}
+.btn:hover{background:var(--surface-2)}
+.btn:active{transform:translateY(1px)}
+.btn:disabled{opacity:.45;cursor:not-allowed;transform:none}
+
+/* ---------- 內容區 ---------- */
+.content{padding:20px 24px 44px;max-width:1400px}
+.panel{
+  background:var(--surface);border:1px solid var(--border);
+  border-radius:var(--r-panel);box-shadow:var(--shadow);
+}
+.panel-head{
+  display:flex;align-items:baseline;gap:10px;
+  padding:14px 18px 12px;border-bottom:1px solid var(--border);
+}
+.panel-head h2{font-size:14.5px;font-weight:600}
+.panel-head .meta{margin-left:auto;font-size:12px;color:var(--text-3)}
+
+/* ---------- KPI 列 ---------- */
+.kpis{display:grid;grid-template-columns:repeat(4,minmax(0,1fr))}
+.kpi{padding:16px 20px 14px;min-width:0}
+.kpi + .kpi{border-left:1px solid var(--border)}
+.kpi-label{font-size:12.5px;color:var(--text-2)}
+.kpi-value{font-size:24px;font-weight:600;margin-top:4px;letter-spacing:-.01em}
+.kpi-value .cur{font-size:14px;font-weight:500;color:var(--text-2);margin-right:2px}
+.kpi-foot{display:flex;align-items:center;gap:7px;margin-top:8px}
+.delta{font-size:12px;font-weight:600}
+.delta.up{color:var(--pos)}
+.delta.down{color:var(--neg)}
+.vs{font-size:11px;color:var(--text-3)}
+.spark{margin-left:auto;flex:none}
+.spark polyline{fill:none;stroke:var(--accent);stroke-width:1.5;opacity:.5;stroke-linejoin:round;stroke-linecap:round}
+
+/* ---------- 圖表列 ---------- */
+.charts{display:grid;grid-template-columns:minmax(0,2fr) minmax(0,1fr);gap:16px;margin-top:16px}
+.chart-body{padding:14px 18px 10px}
+.chart-scroll{overflow-x:auto}
+.trend-svg{display:block;width:100%;height:auto;min-width:540px}
+.trend-svg .grid-line{stroke:var(--border);stroke-width:1}
+.trend-svg .avg-line{stroke:var(--border-strong);stroke-width:1;stroke-dasharray:4 4}
+.trend-svg .axis{font:500 10.5px 'IBM Plex Mono',monospace;fill:var(--text-3)}
+.trend-svg .anno{font:500 11px 'Noto Sans TC',sans-serif;fill:var(--text-2)}
+.trend-svg .line{fill:none;stroke:var(--accent);stroke-width:2;stroke-linejoin:round;stroke-linecap:round}
+.trend-svg .dot{fill:var(--accent)}
+.trend-svg .dot-today{fill:var(--surface);stroke:var(--accent);stroke-width:2}
+
+/* 通路長條（純 CSS，單色階層透明度） */
+.chs{padding:6px 18px 4px}
+.ch{padding:10px 0 11px}
+.ch + .ch{border-top:1px solid var(--border)}
+.ch-top{display:flex;align-items:baseline;gap:8px}
+.ch-name{font-size:13.5px}
+.ch-val{margin-left:auto;font-size:12.5px;color:var(--text-1)}
+.ch-bot{display:flex;align-items:center;gap:10px;margin-top:6px}
+.ch-bar{height:6px;border-radius:3px;background:var(--accent);flex:none}
+.ch-pct{font-size:11px;color:var(--text-3);margin-left:auto}
+.ch-sum{
+  display:flex;align-items:baseline;border-top:1px solid var(--border);
+  padding:12px 18px;font-size:13px;color:var(--text-2);
+}
+.ch-sum b{margin-left:auto;font-size:13.5px;font-weight:600;color:var(--text-1)}
+
+/* ---------- 訂單表格 ---------- */
+.orders{margin-top:16px}
+.table-scroll{overflow-x:auto}
+table{width:100%;border-collapse:collapse;white-space:nowrap}
+th{
+  text-align:left;font-size:12px;font-weight:500;color:var(--text-3);
+  padding:10px 14px;border-bottom:1px solid var(--border);
+}
+td{font-size:13.5px;padding:11px 14px;border-bottom:1px solid var(--border)}
+tbody tr:last-child td{border-bottom:0}
+tbody tr{transition:background .15s ease}
+tbody tr:hover{background:var(--surface-2)}
+td.prod{max-width:250px;overflow:hidden;text-overflow:ellipsis}
+td.chan{color:var(--text-2)}
+th.r,td.r{text-align:right}
+td.amt{font-size:13px}
+td.time{font-size:12px;color:var(--text-3)}
+td.oid{font-size:12.5px;color:var(--text-2)}
+.st{
+  display:inline-block;padding:2px 8px;font-size:12px;font-weight:500;
+  border-radius:var(--r-tag);line-height:1.5;
+}
+.st-wait{color:var(--warn);background:color-mix(in srgb,var(--warn) 11%,transparent)}
+.st-proc{color:var(--text-2);background:var(--surface-2);border:1px solid var(--border)}
+.st-ship{color:var(--accent-ink);background:color-mix(in srgb,var(--accent) 10%,transparent)}
+.st-done{color:var(--pos);background:color-mix(in srgb,var(--pos) 10%,transparent)}
+.st-ret{color:var(--neg);background:color-mix(in srgb,var(--neg) 9%,transparent)}
+
+/* ---------- 行動版遮罩 ---------- */
+.overlay{
+  position:fixed;inset:0;z-index:30;background:rgba(15,17,22,.42);
+  opacity:0;pointer-events:none;transition:opacity .2s ease;
+}
+body.nav-open .overlay{opacity:1;pointer-events:auto}
+
+/* ---------- 響應式 ---------- */
+@media (max-width:1100px){
+  .charts{grid-template-columns:1fr}
+  .kpis{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .kpi:nth-child(3){border-left:0}
+  .kpi:nth-child(n+3){border-top:1px solid var(--border)}
+}
+@media (max-width:960px){
+  .app{grid-template-columns:1fr}
+  .sidebar{
+    position:fixed;left:0;top:0;bottom:0;width:262px;z-index:40;
+    transform:translateX(-103%);transition:transform .22s ease;
+    box-shadow:0 0 0 transparent;
+  }
+  body.nav-open .sidebar{transform:none;box-shadow:0 12px 40px rgba(10,12,18,.22)}
+  .menu-toggle{display:flex}
+}
+@media (max-width:760px){
+  .search{display:none}
+  .topbar{padding:0 16px}
+  .content{padding:16px 16px 36px}
+  .page-head p{display:none}
+}
+@media (max-width:560px){
+  .btn-export{display:none}
+  .kpis{grid-template-columns:1fr}
+  .kpi{border-left:0 !important}
+  .kpi + .kpi{border-top:1px solid var(--border)}
+}
+@media (prefers-reduced-motion: reduce){
+  *,*::before,*::after{transition:none !important;animation:none !important}
+}
+</style>
+</head>
+<body>
+<a class="skip" href="#main">跳至主要內容</a>
+<div class="app">
+
+  <!-- ============ 側邊欄 ============ -->
+  <aside class="sidebar" id="sidebar" aria-label="主選單">
+    <div class="brand">
+      <span class="brand-mark" aria-hidden="true">
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+          <polyline points="1,9 4.5,9 6.5,3.5 9.5,12.5 11.5,9 15,9"
+            stroke="#f7f8fa" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </span>
+      <span class="brand-name">Pulse<small>脈搏</small></span>
+    </div>
+
+    <nav class="nav">
+      <a href="#" aria-current="page">總覽</a>
+      <div class="nav-group">
+        <div class="nav-label">營運</div>
+        <a href="#">訂單<span class="nav-count num">12</span></a>
+        <a href="#">商品</a>
+        <a href="#">庫存</a>
+        <a href="#">出貨</a>
+      </div>
+      <div class="nav-group">
+        <div class="nav-label">行銷</div>
+        <a href="#">活動檔期</a>
+        <a href="#">優惠券</a>
+      </div>
+      <div class="nav-group">
+        <div class="nav-label">分析</div>
+        <a href="#">銷售報表</a>
+        <a href="#">流量來源</a>
+      </div>
+    </nav>
+
+    <div class="side-foot">
+      <nav class="nav" aria-label="次要選單"><a href="#">設定</a></nav>
+      <div class="user">
+        <span class="avatar" aria-hidden="true">君</span>
+        <span><b>王品君</b><small>營運經理</small></span>
+      </div>
+    </div>
+  </aside>
+  <div class="overlay" id="overlay" aria-hidden="true"></div>
+
+  <div class="main">
+    <!-- ============ 頂欄 ============ -->
+    <header class="topbar">
+      <button class="menu-toggle" id="navToggle" aria-label="開啟選單" aria-expanded="false" aria-controls="sidebar">
+        <span></span><span></span><span></span>
+      </button>
+      <div class="page-head">
+        <h1>營運總覽</h1>
+        <p>資料更新於 <span class="num">07/04 14:30</span></p>
+      </div>
+      <div class="topbar-right">
+        <div class="seg" role="group" aria-label="時間範圍">
+          <button aria-pressed="false">今日</button>
+          <button aria-pressed="false">近 7 天</button>
+          <button aria-pressed="true">近 30 天</button>
+        </div>
+        <input class="search" type="search" placeholder="搜尋訂單、商品" aria-label="搜尋訂單、商品">
+        <button class="btn btn-export" type="button">匯出報表</button>
+      </div>
+    </header>
+
+    <main class="content" id="main">
+
+      <!-- ============ KPI ============ -->
+      <section class="panel kpis" aria-label="關鍵指標">
+        <div class="kpi">
+          <div class="kpi-label">營收</div>
+          <div class="kpi-value num"><span class="cur">NT$</span>4,218,560</div>
+          <div class="kpi-foot">
+            <span class="delta up num">↑ 12.4%</span><span class="vs">vs 前 30 天</span>
+            <svg class="spark" width="84" height="28" viewBox="0 0 84 28" aria-hidden="true">
+              <polyline points="2,20.6 13.4,17.6 24.9,4.4 36.3,11 47.7,18.8 59.1,23.6 70.6,21.2 82,16.4"/>
+            </svg>
+          </div>
+        </div>
+        <div class="kpi">
+          <div class="kpi-label">訂單數</div>
+          <div class="kpi-value num">1,847</div>
+          <div class="kpi-foot">
+            <span class="delta up num">↑ 8.2%</span><span class="vs">vs 前 30 天</span>
+            <svg class="spark" width="84" height="28" viewBox="0 0 84 28" aria-hidden="true">
+              <polyline points="2,20.5 13.4,17.3 24.9,5.3 36.3,11.8 47.7,19.5 59.1,23.8 70.6,21.6 82,15.1"/>
+            </svg>
+          </div>
+        </div>
+        <div class="kpi">
+          <div class="kpi-label">客單價</div>
+          <div class="kpi-value num"><span class="cur">NT$</span>2,284</div>
+          <div class="kpi-foot">
+            <span class="delta up num">↑ 3.9%</span><span class="vs">vs 前 30 天</span>
+            <svg class="spark" width="84" height="28" viewBox="0 0 84 28" aria-hidden="true">
+              <polyline points="2,10.9 13.4,16.6 24.9,24 36.3,17.6 47.7,8.8 59.1,4.7 70.6,13 82,19.6"/>
+            </svg>
+          </div>
+        </div>
+        <div class="kpi">
+          <div class="kpi-label">轉換率</div>
+          <div class="kpi-value num">2.87%</div>
+          <div class="kpi-foot">
+            <span class="delta down num">↓ 4.7%</span><span class="vs">vs 前 30 天</span>
+            <svg class="spark" width="84" height="28" viewBox="0 0 84 28" aria-hidden="true">
+              <polyline points="2,14.5 13.4,17.4 24.9,5.8 36.3,21.7 47.7,19.8 59.1,23.1 70.6,15.9 82,18.8"/>
+            </svg>
+          </div>
+        </div>
+      </section>
+
+      <!-- ============ 圖表 ============ -->
+      <section class="charts" aria-label="趨勢圖表">
+
+        <!-- 營收趨勢：手寫 SVG 折線 + 面積 -->
+        <div class="panel">
+          <div class="panel-head">
+            <h2>營收趨勢</h2>
+            <span class="meta"><span class="num">6/05 - 7/04</span> · 日均 <span class="num">14.1</span> 萬</span>
+          </div>
+          <div class="chart-body chart-scroll">
+            <svg class="trend-svg" viewBox="0 0 720 260" role="img" aria-label="近 30 天每日營收折線圖，6 月 18 日年中慶達最高點 26.8 萬，虛線為日均 14.1 萬">
+              <defs>
+                <linearGradient id="gA" x1="0" y1="0" x2="0" y2="1">
+                  <stop offset="0" style="stop-color:var(--accent);stop-opacity:.16"/>
+                  <stop offset="1" style="stop-color:var(--accent);stop-opacity:0"/>
+                </linearGradient>
+              </defs>
+              <!-- 橫向格線與 Y 軸刻度 -->
+              <line class="grid-line" x1="42" y1="20"    x2="710" y2="20"/>
+              <line class="grid-line" x1="42" y1="86.7"  x2="710" y2="86.7"/>
+              <line class="grid-line" x1="42" y1="153.3" x2="710" y2="153.3"/>
+              <line class="grid-line" x1="42" y1="220"   x2="710" y2="220"/>
+              <text class="anno" x="34" y="23"    text-anchor="end" font-size="10.5">30萬</text>
+              <text class="anno" x="34" y="89.7"  text-anchor="end" font-size="10.5">20萬</text>
+              <text class="anno" x="34" y="156.3" text-anchor="end" font-size="10.5">10萬</text>
+              <text class="axis" x="34" y="223"   text-anchor="end">0</text>
+              <!-- 日均線 -->
+              <line class="avg-line" x1="42" y1="126.3" x2="710" y2="126.3"/>
+              <!-- 面積 -->
+              <path fill="url(#gA)" d="M42,141.3 L65,132 L88.1,119.3 L111.1,124.7 L134.1,139.3 L157.2,142.7 L180.2,137.3 L203.2,134 L226.3,128 L249.3,116.7 L272.3,122 L295.4,134.7 L318.4,118.7 L341.4,41.3 L364.5,102.7 L387.5,126 L410.5,114.7 L433.6,120.7 L456.6,138.7 L479.6,141.3 L502.7,136 L525.7,130.7 L548.7,127.3 L571.8,112.7 L594.8,120 L617.8,128.7 L640.9,134 L663.9,131.3 L686.9,126 L710,165.3 L710,220 L42,220 Z"/>
+              <!-- 折線 -->
+              <polyline class="line" points="42,141.3 65,132 88.1,119.3 111.1,124.7 134.1,139.3 157.2,142.7 180.2,137.3 203.2,134 226.3,128 249.3,116.7 272.3,122 295.4,134.7 318.4,118.7 341.4,41.3 364.5,102.7 387.5,126 410.5,114.7 433.6,120.7 456.6,138.7 479.6,141.3 502.7,136 525.7,130.7 548.7,127.3 571.8,112.7 594.8,120 617.8,128.7 640.9,134 663.9,131.3 686.9,126 710,165.3"/>
+              <!-- 618 年中慶標註 -->
+              <circle class="dot" cx="341.4" cy="41.3" r="3"/>
+              <text class="anno" x="341.4" y="28" text-anchor="middle">618 年中慶 <tspan class="axis">26.8萬</tspan></text>
+              <!-- 今日（未完整）空心點 -->
+              <circle class="dot-today" cx="710" cy="165.3" r="3.5"/>
+              <!-- X 軸刻度 -->
+              <text class="axis" x="42"    y="242" text-anchor="middle">6/05</text>
+              <text class="axis" x="203.2" y="242" text-anchor="middle">6/12</text>
+              <text class="axis" x="364.5" y="242" text-anchor="middle">6/19</text>
+              <text class="axis" x="525.7" y="242" text-anchor="middle">6/26</text>
+              <text class="axis" x="686.9" y="242" text-anchor="middle">7/03</text>
+            </svg>
+          </div>
+        </div>
+
+        <!-- 通路營收：純 CSS 長條 -->
+        <div class="panel">
+          <div class="panel-head">
+            <h2>通路營收</h2>
+            <span class="meta">近 30 天</span>
+          </div>
+          <div class="chs">
+            <div class="ch">
+              <div class="ch-top"><span class="ch-name">官網</span><span class="ch-val num">NT$1,682,400</span></div>
+              <div class="ch-bot"><span class="ch-bar" style="width:100%"></span><span class="ch-pct num">39.9%</span></div>
+            </div>
+            <div class="ch">
+              <div class="ch-top"><span class="ch-name">蝦皮購物</span><span class="ch-val num">NT$1,024,900</span></div>
+              <div class="ch-bot"><span class="ch-bar" style="width:60.9%;opacity:.78"></span><span class="ch-pct num">24.3%</span></div>
+            </div>
+            <div class="ch">
+              <div class="ch-top"><span class="ch-name">momo 購物網</span><span class="ch-val num">NT$789,300</span></div>
+              <div class="ch-bot"><span class="ch-bar" style="width:46.9%;opacity:.6"></span><span class="ch-pct num">18.7%</span></div>
+            </div>
+            <div class="ch">
+              <div class="ch-top"><span class="ch-name">PChome 24h</span><span class="ch-val num">NT$466,200</span></div>
+              <div class="ch-bot"><span class="ch-bar" style="width:27.7%;opacity:.44"></span><span class="ch-pct num">11.1%</span></div>
+            </div>
+            <div class="ch">
+              <div class="ch-top"><span class="ch-name">LINE 購物</span><span class="ch-val num">NT$255,760</span></div>
+              <div class="ch-bot"><span class="ch-bar" style="width:15.2%;opacity:.3"></span><span class="ch-pct num">6.1%</span></div>
+            </div>
+          </div>
+          <div class="ch-sum">合計<b class="num">NT$4,218,560</b></div>
+        </div>
+      </section>
+
+      <!-- ============ 訂單表格 ============ -->
+      <section class="panel orders" aria-label="最新訂單">
+        <div class="panel-head">
+          <h2>最新訂單</h2>
+          <span class="meta">今日新增 <span class="num">38</span> 筆</span>
+          <a href="#" style="font-size:13px;margin-left:14px">查看全部</a>
+        </div>
+        <div class="table-scroll">
+          <table>
+            <caption class="sr-only">最新訂單列表，含編號、客戶、商品、通路、金額、狀態與時間</caption>
+            <thead>
+              <tr>
+                <th scope="col">訂單編號</th>
+                <th scope="col">客戶</th>
+                <th scope="col">商品</th>
+                <th scope="col">通路</th>
+                <th scope="col" class="r">金額</th>
+                <th scope="col">狀態</th>
+                <th scope="col" class="r">時間</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td class="oid num">260704-0812</td>
+                <td>林芷萱</td>
+                <td class="prod">真空保溫杯 750ml 霧岩灰</td>
+                <td class="chan">官網</td>
+                <td class="amt num r">NT$1,280</td>
+                <td><span class="st st-wait">待出貨</span></td>
+                <td class="time num r">07/04 14:22</td>
+              </tr>
+              <tr>
+                <td class="oid num">260704-0811</td>
+                <td>張哲瑋</td>
+                <td class="prod">降噪藍牙耳機 Air Pro 2</td>
+                <td class="chan">momo 購物網</td>
+                <td class="amt num r">NT$2,990</td>
+                <td><span class="st st-wait">待出貨</span></td>
+                <td class="time num r">07/04 14:05</td>
+              </tr>
+              <tr>
+                <td class="oid num">260704-0807</td>
+                <td>吳孟璇</td>
+                <td class="prod">氣炸鍋 5.5L 曜石黑</td>
+                <td class="chan">蝦皮購物</td>
+                <td class="amt num r">NT$3,180</td>
+                <td><span class="st st-proc">處理中</span></td>
+                <td class="time num r">07/04 13:47</td>
+              </tr>
+              <tr>
+                <td class="oid num">260704-0803</td>
+                <td>許育誠</td>
+                <td class="prod">石墨烯涼感被 雙人款</td>
+                <td class="chan">官網</td>
+                <td class="amt num r">NT$2,480</td>
+                <td><span class="st st-ship">已出貨</span></td>
+                <td class="time num r">07/04 12:58</td>
+              </tr>
+              <tr>
+                <td class="oid num">260704-0799</td>
+                <td>陳品妤</td>
+                <td class="prod">快充行動電源 10000mAh 兩入</td>
+                <td class="chan">LINE 購物</td>
+                <td class="amt num r">NT$1,560</td>
+                <td><span class="st st-ship">已出貨</span></td>
+                <td class="time num r">07/04 11:36</td>
+              </tr>
+              <tr>
+                <td class="oid num">260704-0795</td>
+                <td>黃冠霖</td>
+                <td class="prod">無線電競滑鼠 RX-8</td>
+                <td class="chan">PChome 24h</td>
+                <td class="amt num r">NT$1,890</td>
+                <td><span class="st st-ship">已出貨</span></td>
+                <td class="time num r">07/04 10:52</td>
+              </tr>
+              <tr>
+                <td class="oid num">260703-0781</td>
+                <td>蔡佳彣</td>
+                <td class="prod">陶瓷不沾平底鍋 28cm</td>
+                <td class="chan">蝦皮購物</td>
+                <td class="amt num r">NT$1,680</td>
+                <td><span class="st st-ret">退貨處理</span></td>
+                <td class="time num r">07/03 16:40</td>
+              </tr>
+              <tr>
+                <td class="oid num">260703-0774</td>
+                <td>劉承恩</td>
+                <td class="prod">冷萃濾掛咖啡 30 入禮盒</td>
+                <td class="chan">官網</td>
+                <td class="amt num r">NT$1,494</td>
+                <td><span class="st st-done">已完成</span></td>
+                <td class="time num r">07/03 15:28</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+    </main>
+  </div>
+</div>
+
+<script>
+// 僅行動版側邊欄開合，無任何外部函式庫
+(function(){
+  var toggle = document.getElementById('navToggle');
+  var overlay = document.getElementById('overlay');
+  function setNav(open){
+    document.body.classList.toggle('nav-open', open);
+    toggle.setAttribute('aria-expanded', String(open));
+    toggle.setAttribute('aria-label', open ? '關閉選單' : '開啟選單');
+  }
+  toggle.addEventListener('click', function(){
+    setNav(!document.body.classList.contains('nav-open'));
+  });
+  overlay.addEventListener('click', function(){ setNav(false); });
+  document.addEventListener('keydown', function(e){
+    if (e.key === 'Escape') setNav(false);
+  });
+})();
+</script>
+</body>
+</html>
