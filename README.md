@@ -32,20 +32,25 @@ npx skills add pbakaus/impeccable -g -y
 
 （`frontend-design` 來自 Claude Code 官方 plugin；`ui-ux-pro-max` 已安裝於 `~/.claude/skills/`。）
 
-## 成果截圖（1440×900，點圖可看原始 HTML）
+## 線上瀏覽
+
+- **對比首頁（分頁切換七個變體）**：https://josh.hu/designcompare/
+- 各變體直連：`https://josh.hu/designcompare/pages/<變體名>.html`
+
+## 成果截圖（1440×900，點圖開啟線上頁面）
 
 | | |
 |---|---|
-| **baseline** — 無 Skill 對照組<br>[![baseline](screenshots/baseline.png)](pages/baseline.html) | **frontend-design** — Anthropic 官方<br>[![frontend-design](screenshots/frontend-design.png)](pages/frontend-design.html) |
-| **ui-ux-pro-max** — 規則庫型<br>[![ui-ux-pro-max](screenshots/ui-ux-pro-max.png)](pages/ui-ux-pro-max.html) | **emil-design-eng** — 動效最佳<br>[![emil-design-eng](screenshots/emil-design-eng.png)](pages/emil-design-eng.html) |
-| **web-design-guidelines** — Vercel 規範<br>[![web-design-guidelines](screenshots/web-design-guidelines.png)](pages/web-design-guidelines.html) | **taste-skill** — AI 味最小<br>[![taste-skill](screenshots/taste-skill.png)](pages/taste-skill.html) |
-| **impeccable** — 設計語彙系統<br>[![impeccable](screenshots/impeccable.png)](pages/impeccable.html) | |
+| **baseline** — 無 Skill 對照組<br>[![baseline](screenshots/baseline.png)](https://josh.hu/designcompare/pages/baseline.html) | **frontend-design** — Anthropic 官方<br>[![frontend-design](screenshots/frontend-design.png)](https://josh.hu/designcompare/pages/frontend-design.html) |
+| **ui-ux-pro-max** — 規則庫型<br>[![ui-ux-pro-max](screenshots/ui-ux-pro-max.png)](https://josh.hu/designcompare/pages/ui-ux-pro-max.html) | **emil-design-eng** — 動效最佳<br>[![emil-design-eng](screenshots/emil-design-eng.png)](https://josh.hu/designcompare/pages/emil-design-eng.html) |
+| **web-design-guidelines** — Vercel 規範<br>[![web-design-guidelines](screenshots/web-design-guidelines.png)](https://josh.hu/designcompare/pages/web-design-guidelines.html) | **taste-skill** — AI 味最小<br>[![taste-skill](screenshots/taste-skill.png)](https://josh.hu/designcompare/pages/taste-skill.html) |
+| **impeccable** — 設計語彙系統<br>[![impeccable](screenshots/impeccable.png)](https://josh.hu/designcompare/pages/impeccable.html) | |
 
 ## 本地瀏覽
 
 ```bash
 python3 -m http.server 8787
-# 開啟 http://localhost:8787 — index.html 提供六個變體的切換對比
+# 開啟 http://localhost:8787 — index.html 提供七個變體的切換對比
 ```
 
 ## 專案結構
